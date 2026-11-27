@@ -350,6 +350,7 @@
    "title": "Tofu scramble on toast",
    "hero": "firm tofu",
    "serving": "150 g tofu, 2 slices wholemeal toast, spinach",
+   "cuisine": "American",
    "items": [
     [
      "tofu",
@@ -379,6 +380,7 @@
    "title": "Peanut butter overnight oats",
    "hero": "soya milk, oats, peanut butter",
    "serving": "50 g oats, 200 ml soya milk, 20 g peanut butter",
+   "cuisine": "American",
    "items": [
     [
      "oats",
@@ -404,6 +406,7 @@
    "title": "Chickpea flour omelette",
    "hero": "chickpea flour",
    "serving": "60 g chickpea flour, peppers, spinach",
+   "cuisine": "Indian",
    "items": [
     [
      "chickflour",
@@ -433,6 +436,7 @@
    "title": "Hemp seed porridge",
    "hero": "hemp seeds, soya milk, oats",
    "serving": "50 g oats, 250 ml soya milk, 20 g hemp seeds",
+   "cuisine": "British",
    "items": [
     [
      "oats",
@@ -458,6 +462,7 @@
    "title": "Soya yoghurt crunch bowl",
    "hero": "soya yoghurt, seeds",
    "serving": "250 g soya yoghurt, granola, pumpkin seeds",
+   "cuisine": "American",
    "items": [
     [
      "soyayog",
@@ -483,6 +488,7 @@
    "title": "Peanut butter banana toast",
    "hero": "peanut butter, hemp seeds",
    "serving": "2 slices wholemeal toast, peanut butter, banana",
+   "cuisine": "American",
    "items": [
     [
      "bread",
@@ -508,6 +514,7 @@
    "title": "Berry seed overnight oats",
    "hero": "soya milk, oats, pumpkin seeds",
    "serving": "50 g oats, 200 ml soya milk, seeds, berries",
+   "cuisine": "American",
    "items": [
     [
      "oats",
@@ -533,6 +540,7 @@
    "title": "Chickpea “tuna” sandwich",
    "hero": "chickpeas",
    "serving": "130 g mashed chickpeas, 2 slices wholemeal",
+   "cuisine": "British",
    "items": [
     [
      "chickpeas",
@@ -558,6 +566,7 @@
    "title": "Red lentil soup with bread",
    "hero": "red lentils",
    "serving": "200 g cooked lentils, veg, tomatoes, 1 slice",
+   "cuisine": "Turkish",
    "items": [
     [
      "lentils",
@@ -587,6 +596,7 @@
    "title": "Peanut tofu noodles",
    "hero": "tofu, peanut butter",
    "serving": "130 g tofu, wholewheat noodles, veg",
+   "cuisine": "Thai",
    "items": [
     [
      "tofu",
@@ -616,6 +626,7 @@
    "title": "Black bean burrito bowl",
    "hero": "black beans, quinoa",
    "serving": "130 g black beans, 120 g quinoa",
+   "cuisine": "Mexican",
    "items": [
     [
      "blackbeans",
@@ -645,6 +656,7 @@
    "title": "Falafel and hummus wrap",
    "hero": "chickpeas",
    "serving": "90 g falafel, 40 g hummus, wholemeal wrap",
+   "cuisine": "Lebanese",
    "items": [
     [
      "falafel",
@@ -670,6 +682,7 @@
    "title": "Edamame rice bowl",
    "hero": "edamame",
    "serving": "130 g edamame, 150 g brown rice, veg",
+   "cuisine": "Japanese",
    "items": [
     [
      "edamame",
@@ -695,6 +708,7 @@
    "title": "Tofu hummus salad wrap",
    "hero": "tofu, chickpeas",
    "serving": "100 g tofu, 40 g hummus, wholemeal wrap, salad",
+   "cuisine": "Lebanese",
    "items": [
     [
      "tofu",
@@ -724,6 +738,7 @@
    "title": "Lentil quinoa salad",
    "hero": "lentils, quinoa",
    "serving": "120 g lentils, 100 g quinoa, veg, pumpkin seeds",
+   "cuisine": "Greek",
    "items": [
     [
      "lentils",
@@ -757,6 +772,7 @@
    "title": "Lentil bolognese",
    "hero": "brown lentils",
    "serving": "150 g lentils, wholewheat spaghetti",
+   "cuisine": "Italian",
    "items": [
     [
      "lentils",
@@ -790,6 +806,7 @@
    "title": "Chickpea and spinach curry",
    "hero": "chickpeas",
    "serving": "180 g chickpeas, spinach, brown rice",
+   "cuisine": "Indian",
    "items": [
     [
      "chickpeas",
@@ -827,6 +844,7 @@
    "title": "Crispy tofu stir-fry",
    "hero": "firm tofu",
    "serving": "180 g tofu, veg, brown rice",
+   "cuisine": "Chinese",
    "items": [
     [
      "tofu",
@@ -852,6 +870,7 @@
    "title": "Tempeh tacos",
    "hero": "tempeh",
    "serving": "120 g tempeh, wholemeal wraps, salsa veg",
+   "cuisine": "Mexican",
    "items": [
     [
      "tempeh",
@@ -881,6 +900,7 @@
    "title": "Black bean chilli with rice",
    "hero": "black beans",
    "serving": "200 g black beans, brown rice",
+   "cuisine": "American",
    "items": [
     [
      "blackbeans",
@@ -910,6 +930,7 @@
    "title": "Seitan fajitas",
    "hero": "seitan",
    "serving": "150 g seitan, peppers, two wraps",
+   "cuisine": "Mexican",
    "items": [
     [
      "seitan",
@@ -939,6 +960,7 @@
    "title": "Dal with brown rice",
    "hero": "yellow split peas",
    "serving": "200 g cooked split peas, brown rice",
+   "cuisine": "Indian",
    "items": [
     [
      "splitpeas",
@@ -972,6 +994,7 @@
    "title": "Soya mince cottage pie",
    "hero": "soya mince",
    "serving": "40 g dry soya mince, potato topping",
+   "cuisine": "British",
    "items": [
     [
      "tvp",
@@ -1009,6 +1032,7 @@
    "title": "Tofu and veg coconut curry",
    "hero": "firm tofu",
    "serving": "150 g tofu, veg, coconut milk, brown rice",
+   "cuisine": "Thai",
    "items": [
     [
      "tofu",
@@ -1046,6 +1070,7 @@
    "title": "Tempeh veg stir-fry",
    "hero": "tempeh",
    "serving": "120 g tempeh, veg, brown rice",
+   "cuisine": "Indonesian",
    "items": [
     [
      "tempeh",
@@ -1071,6 +1096,7 @@
    "title": "Roasted spiced chickpeas",
    "hero": "chickpeas",
    "serving": "100 g cooked chickpeas, roasted",
+   "cuisine": "Indian",
    "items": [
     [
      "chickpeas",
@@ -1088,6 +1114,7 @@
    "title": "Salted edamame",
    "hero": "edamame",
    "serving": "120 g in pods or shelled",
+   "cuisine": "Japanese",
    "items": [
     [
      "edamame",
@@ -1101,6 +1128,7 @@
    "title": "Apple and peanut butter",
    "hero": "peanut butter",
    "serving": "1 apple, 20 g peanut butter",
+   "cuisine": "American",
    "items": [
     [
      "apple",
@@ -1118,6 +1146,7 @@
    "title": "Hummus and veg sticks",
    "hero": "chickpeas (hummus)",
    "serving": "60 g hummus, raw veg sticks",
+   "cuisine": "Lebanese",
    "items": [
     [
      "hummus",
@@ -1135,6 +1164,7 @@
    "title": "Pumpkin seed trail mix",
    "hero": "pumpkin seeds, nuts",
    "serving": "20 g seeds, 15 g nuts",
+   "cuisine": "American",
    "items": [
     [
      "pumpkinseed",
@@ -1152,6 +1182,7 @@
    "title": "Soya peanut butter smoothie",
    "hero": "soya milk, peanut butter, hemp",
    "serving": "250 ml soya milk, banana, 15 g PB, 10 g hemp",
+   "cuisine": "American",
    "items": [
     [
      "soyamilk",
@@ -1177,6 +1208,7 @@
    "title": "Peanut butter banana rice cakes",
    "hero": "peanut butter",
    "serving": "2 rice cakes, 20 g peanut butter, banana",
+   "cuisine": "American",
    "items": [
     [
      "ricecake",

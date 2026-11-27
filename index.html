@@ -8,7 +8,8 @@
   HOW TO UPDATE THE MEAL BANK
   Find the block <script type="application/json" id="meal-data"> near the bottom of this file.
   - "ingredients" lists foods per 100 g (or per 100 ml): n = name, u = unit, p = protein, c = carbs, f = fat, fi = fibre, ca = calcium (mg).
-  - "meals" lists the bank. Each meal has an id (unique), kind (breakfast, lunch, dinner or snack), title, serving note,
+  - "meals" lists the bank. Each meal has an id (unique), kind (breakfast, lunch, dinner or snack; these show as Breakfast, Dinner, Tea and Snacks),
+    title, serving note, cuisine (e.g. Italian; flags are drawn for common cuisines and others get a globe),
     hero (main protein) and items: [ingredient key, grams]. Protein, carbs, fat, fibre, calcium and the pie chart are worked out automatically.
   Optional: if a file called meals.json (same layout) sits next to this file on a web host, the page uses it instead.
 -->
@@ -27,19 +28,17 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;back
 :focus-visible{outline:3px solid #1B6FD6;outline-offset:2px}
 .app{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:100vh}
 main{overflow:auto;padding:18px 20px 26px}
-.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
-h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:34px;margin:0;color:var(--accent);line-height:1.1}
-.actions{display:flex;flex-wrap:wrap;gap:8px}
+.top{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:16px}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:38px;margin:0;color:var(--accent);line-height:1.1;text-align:center;width:100%}
+.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .btn{font:inherit;font-weight:600;border:1.5px solid var(--accent);background:#fff;color:var(--accent);border-radius:10px;padding:8px 14px;cursor:pointer;min-height:40px}
 .btn:hover{background:#EEF5F0}
 .btn.primary{background:var(--accent);color:#fff}
 .btn.primary:hover{background:#17402F}
 .btn.ghost{border-color:var(--line);color:var(--muted)}
 .grid{display:grid;grid-template-columns:96px repeat(7,minmax(0,1fr));gap:6px;min-width:880px}
-.dayh{background:var(--accent);color:#FBF8F1;border-radius:10px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:44px}
+.dayh{background:var(--accent);color:#FBF8F1;border-radius:10px;padding:8px 10px;display:flex;align-items:center;justify-content:center;min-height:44px}
 .dayh b{font-size:19px;letter-spacing:.02em}
-.dayh input{width:56px;background:transparent;border:0;border-bottom:1.5px solid rgba(251,248,241,.85);color:inherit;font:inherit;font-size:13px;padding:0 0 1px;border-radius:0}
-.dayh input::placeholder{color:rgba(251,248,241,.7)}
 .rowlabel{background:var(--tint);border:1px solid var(--edge);border-radius:10px;padding:10px;display:flex;flex-direction:column;justify-content:center;gap:2px;font-weight:700;font-size:15px;line-height:1.15}
 .rowlabel small{font-weight:400;font-size:12px;color:#3A463F}
 .slot{border:2px dashed #7E8F85;border-radius:10px;background:#fff;min-height:96px;padding:5px;display:flex;flex-direction:column;gap:5px;min-width:0}
@@ -77,16 +76,21 @@ body.arming .slot{border-color:var(--accent);cursor:copy}
 .kchip.on{background:var(--tint,var(--ink));border-color:var(--ink);font-weight:700}
 .kchip[data-kind=all].on{background:var(--ink);color:#fff}
 .quick{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}
-.quick label,.sortl{display:flex;align-items:center;gap:6px;cursor:pointer}
+.quick label{display:flex;align-items:center;gap:6px;cursor:pointer}
 .quick input{width:16px;height:16px;accent-color:var(--accent)}
-.sortl select{font:inherit;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:#fff;min-height:34px}
+.selrow{display:flex;gap:10px}
+.sortl{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;font-size:12.5px;color:var(--muted)}
+.sortl select{width:100%;font:inherit;font-size:14px;color:var(--ink);padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:#fff;min-height:36px}
 .bank-list{flex:1;overflow-y:auto;scroll-behavior:smooth;overscroll-behavior:contain;padding:12px 14px 50px;display:flex;flex-direction:column;gap:10px}
 .nomatch{color:var(--muted);text-align:center;margin:30px 10px}
 .card{background:var(--tint);border:1px solid var(--edge);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;cursor:grab}
 .card:hover{box-shadow:0 2px 8px rgba(31,42,36,.15)}
 .card.armed{outline:3px solid var(--accent);outline-offset:1px}
 .card.dragging{opacity:.5}
+.cardtop{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .kindtag{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#3A463F;font-weight:600}
+.cuisine{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#2F3A33;background:rgba(255,255,255,.62);border-radius:999px;padding:2px 10px 2px 4px;white-space:nowrap}
+.flag{width:22px;height:15px;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.28);display:block;flex:none}
 .card h3{margin:0;font-size:16px;line-height:1.2}
 .serv{margin:0;font-size:12.5px;color:#3A463F}
 .cardmid{display:flex;gap:12px;align-items:center}
@@ -106,6 +110,27 @@ body.arming .slot{border-color:var(--accent);cursor:copy}
 .topbtn{position:absolute;right:20px;bottom:16px;border:0;border-radius:999px;background:var(--ink);color:#fff;font:inherit;font-size:13px;padding:8px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;max-width:min(560px,90vw);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:50}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.totals{margin:22px 0 0;background:#fff;border:1.5px solid #7E8F85;border-radius:12px;padding:14px 16px}
+.totals-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;margin-bottom:10px}
+.totals h2{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:24px;color:var(--accent)}
+.totsum{margin:0;color:var(--muted);font-size:13.5px}
+.totlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 28px}
+.totlist li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dotted #A9B5AD;padding:4px 0;font-size:14px}
+.totlist .ta{white-space:nowrap}
+.totlist li.totempty{grid-column:1/-1;color:var(--muted);border:0}
+.totnote{margin:10px 0 0;font-size:12px;color:var(--muted)}
+dialog{border:0;border-radius:16px;padding:0;width:min(460px,92vw);box-shadow:0 12px 40px rgba(0,0,0,.3);color:var(--ink);background:var(--bg)}
+dialog::backdrop{background:rgba(31,42,36,.5)}
+.dlg{padding:22px 24px;display:flex;flex-direction:column;gap:14px}
+.dlg h2{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:26px;color:var(--accent)}
+.dlg p{margin:0;color:var(--muted)}
+.dlg fieldset{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.dlg legend{font-weight:700;margin-bottom:6px;padding:0}
+.autoopt{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:var(--tint);border:1px solid var(--edge);cursor:pointer;font-weight:600}
+.autoopt input,.dlg .rep input{width:18px;height:18px;accent-color:var(--accent)}
+.dlg .rep{display:flex;align-items:center;gap:10px;cursor:pointer}
+.dlgmsg{color:#B3261E;min-height:1.3em;font-weight:600}
+.dlgbtns{display:flex;gap:8px;justify-content:flex-end}
 @media (max-width:1000px){.app{display:block;height:auto}main{overflow:visible}.bank{border-left:0;border-top:1px solid var(--line);height:85vh}}
 @page{size:A3 landscape;margin:10mm}
 @media print{
@@ -115,14 +140,22 @@ body.arming .slot{border-color:var(--accent);cursor:copy}
  .bank,.actions,.toast,.hint{display:none!important}
  .chip .x{display:none}
  .grid{min-width:0;gap:6px}
- .slot{min-height:106px}
- .slot.k-drinks{min-height:120px}
+ .top{margin-bottom:8px}
+ h1{font-size:32px}
+ .slot{min-height:84px}
+ .slot.k-drinks{min-height:84px}
+ .pline{min-height:23px}
+ .dayh{min-height:36px}
  .glasses{grid-template-columns:repeat(8,1fr)}
  .slot,.prepcell,.chip{break-inside:avoid}
  .chip{cursor:default}
  .quote{margin-top:16px}
- .dayh input::placeholder{color:transparent}
  .drinkNote::placeholder{color:transparent}
+ .totals{break-inside:avoid;margin-top:12px;padding:8px 12px}
+ .totals h2{font-size:20px}
+ .totlist{grid-template-columns:repeat(6,minmax(0,1fr));gap:0 22px}
+ .totlist li{font-size:12px;padding:2px 0}
+ .totnote{margin-top:6px}
 }
 </style>
 </head>
@@ -132,7 +165,9 @@ body.arming .slot{border-color:var(--accent);cursor:copy}
   <div class="top">
    <h1>Weekly Meal Planner</h1>
    <div class="actions">
-    <button class="btn primary" id="btnPdf" type="button">Save as PDF</button>
+    <button class="btn primary" id="btnAuto" type="button">Auto-fill week</button>
+    <button class="btn ghost" id="btnUndo" type="button" hidden>Undo auto-fill</button>
+    <button class="btn" id="btnPdf" type="button">Save as PDF</button>
     <button class="btn" id="btnExport" type="button">Export plan</button>
     <button class="btn" id="btnLoad" type="button">Load plan</button>
     <button class="btn ghost" id="btnClear" type="button">Clear week</button>
@@ -140,6 +175,14 @@ body.arming .slot{border-color:var(--accent);cursor:copy}
    </div>
   </div>
   <div class="grid" id="grid"></div>
+  <section class="totals" aria-labelledby="totTitle">
+   <div class="totals-head">
+    <h2 id="totTitle">Week's ingredients</h2>
+    <p class="totsum" id="totSummary" aria-live="polite"></p>
+   </div>
+   <ul class="totlist" id="totList"></ul>
+   <p class="totnote">Totals across every meal in the plan, using the amounts listed in each meal (cooked weights where marked).</p>
+  </section>
   <p class="quote" id="quote"></p>
  </main>
  <aside class="bank" aria-label="Meal bank">
@@ -150,8 +193,8 @@ body.arming .slot{border-color:var(--accent);cursor:copy}
    <div class="kinds" id="kinds" role="group" aria-label="Filter by meal time">
     <button type="button" class="kchip on" data-kind="all">All</button>
     <button type="button" class="kchip k-breakfast" data-kind="breakfast">Breakfast</button>
-    <button type="button" class="kchip k-lunch" data-kind="lunch">Lunch</button>
-    <button type="button" class="kchip k-dinner" data-kind="dinner">Dinner</button>
+    <button type="button" class="kchip k-lunch" data-kind="lunch">Dinner</button>
+    <button type="button" class="kchip k-dinner" data-kind="dinner">Tea</button>
     <button type="button" class="kchip k-snack" data-kind="snack">Snacks</button>
    </div>
    <div class="quick">
@@ -159,36 +202,62 @@ body.arming .slot{border-color:var(--accent);cursor:copy}
     <label><input type="checkbox" id="fF"> Fibre 10 g+</label>
     <label><input type="checkbox" id="fC"> Calcium 200 mg+</label>
    </div>
-   <label class="sortl">Sort by
-    <select id="sort" aria-label="Sort meals">
-     <option value="default">Meal order</option>
-     <option value="protein">Most protein</option>
-     <option value="fibre">Most fibre</option>
-     <option value="calcium">Most calcium</option>
-     <option value="name">Name A to Z</option>
-    </select>
-   </label>
+   <div class="selrow">
+    <label class="sortl">Sort by
+     <select id="sort">
+      <option value="default">Meal order</option>
+      <option value="protein">Most protein</option>
+      <option value="fibre">Most fibre</option>
+      <option value="calcium">Most calcium</option>
+      <option value="name">Name A to Z</option>
+     </select>
+    </label>
+    <label class="sortl">Cuisine
+     <select id="cuisine"><option value="all">All cuisines</option></select>
+    </label>
+   </div>
   </div>
   <div class="bank-list" id="bankList" tabindex="0" aria-label="Meal cards"></div>
   <button class="topbtn" id="topBtn" type="button" hidden>Back to top</button>
  </aside>
 </div>
+<dialog id="autoDlg" aria-labelledby="autoTitle">
+ <div class="dlg">
+  <h2 id="autoTitle">Auto-fill the week</h2>
+  <p>Pick the meal times to fill. Meals are chosen at random from the bank, with no meal repeated in a row and a mix of protein sources from day to day.</p>
+  <fieldset>
+   <legend>Meal times</legend>
+   <label class="autoopt k-breakfast"><input type="checkbox" id="auto-breakfast" checked> Breakfast</label>
+   <label class="autoopt k-lunch"><input type="checkbox" id="auto-lunch" checked> Dinner</label>
+   <label class="autoopt k-dinner"><input type="checkbox" id="auto-dinner" checked> Tea</label>
+   <label class="autoopt k-snack"><input type="checkbox" id="auto-snack" checked> Snacks &amp; Extras</label>
+  </fieldset>
+  <label class="rep"><input type="checkbox" id="autoReplace"> Replace meals already in these rows</label>
+  <div class="dlgmsg" id="autoMsg" role="alert"></div>
+  <div class="dlgbtns">
+   <button class="btn ghost" id="autoCancel" type="button">Cancel</button>
+   <button class="btn primary" id="autoGo" type="button">Fill the week</button>
+  </div>
+ </div>
+</dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="application/json" id="meal-data">{"ingredients":{"tofu":{"n":"Firm tofu (calcium-set)","u":"g","p":16.0,"c":1.8,"f":8.0,"fi":0.8,"ca":350},"tempeh":{"n":"Tempeh","u":"g","p":20.3,"c":7.6,"f":10.8,"fi":5.0,"ca":100},"seitan":{"n":"Seitan (ready-made)","u":"g","p":17.9,"c":10.7,"f":0.8,"fi":1.2,"ca":20},"tvp":{"n":"Soya mince (dry)","u":"g","p":54.2,"c":19.9,"f":0.6,"fi":3.5,"ca":240},"bread":{"n":"Wholemeal bread","u":"g","p":9.4,"c":42.0,"f":2.5,"fi":7.0,"ca":106},"oats":{"n":"Rolled oats","u":"g","p":16.9,"c":66.3,"f":6.9,"fi":10.6,"ca":54},"soyamilk":{"n":"Soya milk, fortified","u":"ml","p":3.3,"c":0.1,"f":1.8,"fi":0.6,"ca":120},"pb":{"n":"Peanut butter","u":"g","p":25.0,"c":20.0,"f":50.0,"fi":6.0,"ca":40},"hemp":{"n":"Hemp seeds","u":"g","p":31.6,"c":8.7,"f":48.8,"fi":4.0,"ca":70},"chickflour":{"n":"Chickpea flour","u":"g","p":22.0,"c":58.0,"f":6.7,"fi":10.8,"ca":45},"soyayog":{"n":"Soya yoghurt, plain","u":"g","p":4.0,"c":1.0,"f":2.3,"fi":0.6,"ca":120},"granola":{"n":"Granola","u":"g","p":9.0,"c":62.0,"f":16.0,"fi":7.0,"ca":60},"pumpkinseed":{"n":"Pumpkin seeds","u":"g","p":30.2,"c":10.7,"f":49.0,"fi":6.0,"ca":46},"natyeast":{"n":"Nutritional yeast","u":"g","p":50.0,"c":36.0,"f":5.0,"fi":20.0,"ca":20},"chickpeas":{"n":"Chickpeas, cooked","u":"g","p":8.9,"c":27.4,"f":2.6,"fi":7.6,"ca":48},"lentils":{"n":"Lentils, cooked","u":"g","p":9.0,"c":20.1,"f":0.4,"fi":7.9,"ca":19},"blackbeans":{"n":"Black beans, cooked","u":"g","p":8.9,"c":23.7,"f":0.5,"fi":8.7,"ca":27},"splitpeas":{"n":"Split peas, cooked","u":"g","p":8.3,"c":21.1,"f":0.4,"fi":8.3,"ca":14},"edamame":{"n":"Edamame","u":"g","p":11.9,"c":8.9,"f":5.2,"fi":5.2,"ca":63},"quinoa":{"n":"Quinoa, cooked","u":"g","p":4.4,"c":21.3,"f":1.9,"fi":2.8,"ca":17},"brownrice":{"n":"Brown rice, cooked","u":"g","p":2.7,"c":25.6,"f":1.0,"fi":1.6,"ca":10},"wholespag":{"n":"Wholewheat pasta, cooked","u":"g","p":5.3,"c":26.5,"f":0.5,"fi":4.5,"ca":15},"hummus":{"n":"Hummus","u":"g","p":7.9,"c":14.3,"f":9.6,"fi":6.0,"ca":42},"wrap":{"n":"Wholemeal wrap","u":"g","p":9.0,"c":46.0,"f":6.0,"fi":5.0,"ca":100},"falafel":{"n":"Falafel","u":"g","p":13.3,"c":31.8,"f":17.8,"fi":4.9,"ca":54},"tomatoes":{"n":"Tinned tomatoes","u":"g","p":0.9,"c":3.5,"f":0.1,"fi":1.0,"ca":15},"veg":{"n":"Mixed veg","u":"g","p":1.2,"c":7.0,"f":0.2,"fi":2.5,"ca":25},"spinach":{"n":"Spinach","u":"g","p":2.9,"c":3.6,"f":0.4,"fi":2.2,"ca":99},"salad":{"n":"Salad leaves","u":"g","p":1.0,"c":3.0,"f":0.2,"fi":1.0,"ca":30},"oil":{"n":"Cooking oil","u":"g","p":0.0,"c":0.0,"f":100.0,"fi":0.0,"ca":0},"apple":{"n":"Apple","u":"g","p":0.3,"c":13.8,"f":0.2,"fi":2.4,"ca":6},"banana":{"n":"Banana","u":"g","p":1.1,"c":22.8,"f":0.3,"fi":2.6,"ca":5},"berries":{"n":"Berries","u":"g","p":0.7,"c":12.0,"f":0.3,"fi":2.0,"ca":15},"nuts":{"n":"Mixed nuts","u":"g","p":20.0,"c":21.0,"f":54.0,"fi":7.0,"ca":90},"coconutmilk":{"n":"Coconut milk, tinned","u":"g","p":2.0,"c":3.0,"f":21.0,"fi":0.0,"ca":15},"potato":{"n":"Potato, boiled","u":"g","p":2.0,"c":17.0,"f":0.1,"fi":1.8,"ca":8},"veganmayo":{"n":"Vegan mayo","u":"g","p":0.3,"c":2.0,"f":70.0,"fi":0.0,"ca":5},"ricecake":{"n":"Rice cakes","u":"g","p":8.0,"c":82.0,"f":2.8,"fi":4.0,"ca":10}},"meals":[{"id":"b1","kind":"breakfast","title":"Tofu scramble on toast","hero":"firm tofu","serving":"150 g tofu, 2 slices wholemeal toast, spinach","items":[["tofu",150],["natyeast",8],["bread",76],["spinach",40],["oil",5]]},{"id":"b2","kind":"breakfast","title":"Peanut butter overnight oats","hero":"soya milk, oats, peanut butter","serving":"50 g oats, 200 ml soya milk, 20 g peanut butter","items":[["oats",50],["soyamilk",200],["pb",20],["banana",80]]},{"id":"b3","kind":"breakfast","title":"Chickpea flour omelette","hero":"chickpea flour","serving":"60 g chickpea flour, peppers, spinach","items":[["chickflour",60],["veg",80],["spinach",30],["oil",6],["natyeast",5]]},{"id":"b4","kind":"breakfast","title":"Hemp seed porridge","hero":"hemp seeds, soya milk, oats","serving":"50 g oats, 250 ml soya milk, 20 g hemp seeds","items":[["oats",50],["soyamilk",250],["hemp",20],["berries",60]]},{"id":"b5","kind":"breakfast","title":"Soya yoghurt crunch bowl","hero":"soya yoghurt, seeds","serving":"250 g soya yoghurt, granola, pumpkin seeds","items":[["soyayog",250],["granola",30],["pumpkinseed",15],["berries",80]]},{"id":"b6","kind":"breakfast","title":"Peanut butter banana toast","hero":"peanut butter, hemp seeds","serving":"2 slices wholemeal toast, peanut butter, banana","items":[["bread",76],["pb",20],["banana",80],["hemp",10]]},{"id":"b7","kind":"breakfast","title":"Berry seed overnight oats","hero":"soya milk, oats, pumpkin seeds","serving":"50 g oats, 200 ml soya milk, seeds, berries","items":[["oats",50],["soyamilk",200],["pumpkinseed",15],["berries",80]]},{"id":"l1","kind":"lunch","title":"Chickpea “tuna” sandwich","hero":"chickpeas","serving":"130 g mashed chickpeas, 2 slices wholemeal","items":[["chickpeas",130],["veganmayo",15],["bread",76],["salad",40]]},{"id":"l2","kind":"lunch","title":"Red lentil soup with bread","hero":"red lentils","serving":"200 g cooked lentils, veg, tomatoes, 1 slice","items":[["lentils",200],["veg",150],["tomatoes",100],["oil",5],["bread",40]]},{"id":"l3","kind":"lunch","title":"Peanut tofu noodles","hero":"tofu, peanut butter","serving":"130 g tofu, wholewheat noodles, veg","items":[["tofu",130],["wholespag",180],["veg",120],["pb",20],["oil",5]]},{"id":"l4","kind":"lunch","title":"Black bean burrito bowl","hero":"black beans, quinoa","serving":"130 g black beans, 120 g quinoa","items":[["blackbeans",130],["quinoa",120],["veg",80],["salad",30],["oil",5]]},{"id":"l5","kind":"lunch","title":"Falafel and hummus wrap","hero":"chickpeas","serving":"90 g falafel, 40 g hummus, wholemeal wrap","items":[["falafel",90],["hummus",40],["wrap",60],["salad",50]]},{"id":"l6","kind":"lunch","title":"Edamame rice bowl","hero":"edamame","serving":"130 g edamame, 150 g brown rice, veg","items":[["edamame",130],["brownrice",150],["veg",80],["oil",5]]},{"id":"l7","kind":"lunch","title":"Tofu hummus salad wrap","hero":"tofu, chickpeas","serving":"100 g tofu, 40 g hummus, wholemeal wrap, salad","items":[["tofu",100],["hummus",40],["wrap",60],["salad",60],["veg",40]]},{"id":"l8","kind":"lunch","title":"Lentil quinoa salad","hero":"lentils, quinoa","serving":"120 g lentils, 100 g quinoa, veg, pumpkin seeds","items":[["lentils",120],["quinoa",100],["veg",80],["salad",40],["oil",8],["pumpkinseed",10]]},{"id":"d1","kind":"dinner","title":"Lentil bolognese","hero":"brown lentils","serving":"150 g lentils, wholewheat spaghetti","items":[["lentils",150],["tomatoes",200],["veg",120],["oil",8],["wholespag",180],["natyeast",8]]},{"id":"d2","kind":"dinner","title":"Chickpea and spinach curry","hero":"chickpeas","serving":"180 g chickpeas, spinach, brown rice","items":[["chickpeas",180],["spinach",80],["tomatoes",150],["coconutmilk",50],["veg",60],["oil",5],["brownrice",150]]},{"id":"d3","kind":"dinner","title":"Crispy tofu stir-fry","hero":"firm tofu","serving":"180 g tofu, veg, brown rice","items":[["tofu",180],["veg",200],["brownrice",150],["oil",8]]},{"id":"d4","kind":"dinner","title":"Tempeh tacos","hero":"tempeh","serving":"120 g tempeh, wholemeal wraps, salsa veg","items":[["tempeh",120],["wrap",70],["veg",80],["salad",40],["oil",6]]},{"id":"d5","kind":"dinner","title":"Black bean chilli with rice","hero":"black beans","serving":"200 g black beans, brown rice","items":[["blackbeans",200],["tomatoes",200],["veg",120],["oil",6],["brownrice",150]]},{"id":"d6","kind":"dinner","title":"Seitan fajitas","hero":"seitan","serving":"150 g seitan, peppers, two wraps","items":[["seitan",150],["veg",180],["wrap",90],["oil",8],["salad",30]]},{"id":"d7","kind":"dinner","title":"Dal with brown rice","hero":"yellow split peas","serving":"200 g cooked split peas, brown rice","items":[["splitpeas",200],["tomatoes",80],["veg",60],["oil",8],["brownrice",150],["spinach",50]]},{"id":"d8","kind":"dinner","title":"Soya mince cottage pie","hero":"soya mince","serving":"40 g dry soya mince, potato topping","items":[["tvp",40],["veg",120],["tomatoes",100],["potato",250],["soyamilk",40],["oil",6],["natyeast",5]]},{"id":"d9","kind":"dinner","title":"Tofu and veg coconut curry","hero":"firm tofu","serving":"150 g tofu, veg, coconut milk, brown rice","items":[["tofu",150],["tomatoes",150],["coconutmilk",50],["veg",120],["brownrice",150],["oil",5],["spinach",40]]},{"id":"d10","kind":"dinner","title":"Tempeh veg stir-fry","hero":"tempeh","serving":"120 g tempeh, veg, brown rice","items":[["tempeh",120],["veg",200],["brownrice",150],["oil",8]]},{"id":"s1","kind":"snack","title":"Roasted spiced chickpeas","hero":"chickpeas","serving":"100 g cooked chickpeas, roasted","items":[["chickpeas",100],["oil",6]]},{"id":"s2","kind":"snack","title":"Salted edamame","hero":"edamame","serving":"120 g in pods or shelled","items":[["edamame",120]]},{"id":"s3","kind":"snack","title":"Apple and peanut butter","hero":"peanut butter","serving":"1 apple, 20 g peanut butter","items":[["apple",150],["pb",20]]},{"id":"s4","kind":"snack","title":"Hummus and veg sticks","hero":"chickpeas (hummus)","serving":"60 g hummus, raw veg sticks","items":[["hummus",60],["veg",120]]},{"id":"s5","kind":"snack","title":"Pumpkin seed trail mix","hero":"pumpkin seeds, nuts","serving":"20 g seeds, 15 g nuts","items":[["pumpkinseed",20],["nuts",15]]},{"id":"s6","kind":"snack","title":"Soya peanut butter smoothie","hero":"soya milk, peanut butter, hemp","serving":"250 ml soya milk, banana, 15 g PB, 10 g hemp","items":[["soyamilk",250],["banana",100],["pb",15],["hemp",10]]},{"id":"s7","kind":"snack","title":"Peanut butter banana rice cakes","hero":"peanut butter","serving":"2 rice cakes, 20 g peanut butter, banana","items":[["ricecake",20],["pb",20],["banana",60]]}]}</script>
+<script type="application/json" id="meal-data">{"ingredients":{"tofu":{"n":"Firm tofu (calcium-set)","u":"g","p":16.0,"c":1.8,"f":8.0,"fi":0.8,"ca":350},"tempeh":{"n":"Tempeh","u":"g","p":20.3,"c":7.6,"f":10.8,"fi":5.0,"ca":100},"seitan":{"n":"Seitan (ready-made)","u":"g","p":17.9,"c":10.7,"f":0.8,"fi":1.2,"ca":20},"tvp":{"n":"Soya mince (dry)","u":"g","p":54.2,"c":19.9,"f":0.6,"fi":3.5,"ca":240},"bread":{"n":"Wholemeal bread","u":"g","p":9.4,"c":42.0,"f":2.5,"fi":7.0,"ca":106},"oats":{"n":"Rolled oats","u":"g","p":16.9,"c":66.3,"f":6.9,"fi":10.6,"ca":54},"soyamilk":{"n":"Soya milk, fortified","u":"ml","p":3.3,"c":0.1,"f":1.8,"fi":0.6,"ca":120},"pb":{"n":"Peanut butter","u":"g","p":25.0,"c":20.0,"f":50.0,"fi":6.0,"ca":40},"hemp":{"n":"Hemp seeds","u":"g","p":31.6,"c":8.7,"f":48.8,"fi":4.0,"ca":70},"chickflour":{"n":"Chickpea flour","u":"g","p":22.0,"c":58.0,"f":6.7,"fi":10.8,"ca":45},"soyayog":{"n":"Soya yoghurt, plain","u":"g","p":4.0,"c":1.0,"f":2.3,"fi":0.6,"ca":120},"granola":{"n":"Granola","u":"g","p":9.0,"c":62.0,"f":16.0,"fi":7.0,"ca":60},"pumpkinseed":{"n":"Pumpkin seeds","u":"g","p":30.2,"c":10.7,"f":49.0,"fi":6.0,"ca":46},"natyeast":{"n":"Nutritional yeast","u":"g","p":50.0,"c":36.0,"f":5.0,"fi":20.0,"ca":20},"chickpeas":{"n":"Chickpeas, cooked","u":"g","p":8.9,"c":27.4,"f":2.6,"fi":7.6,"ca":48},"lentils":{"n":"Lentils, cooked","u":"g","p":9.0,"c":20.1,"f":0.4,"fi":7.9,"ca":19},"blackbeans":{"n":"Black beans, cooked","u":"g","p":8.9,"c":23.7,"f":0.5,"fi":8.7,"ca":27},"splitpeas":{"n":"Split peas, cooked","u":"g","p":8.3,"c":21.1,"f":0.4,"fi":8.3,"ca":14},"edamame":{"n":"Edamame","u":"g","p":11.9,"c":8.9,"f":5.2,"fi":5.2,"ca":63},"quinoa":{"n":"Quinoa, cooked","u":"g","p":4.4,"c":21.3,"f":1.9,"fi":2.8,"ca":17},"brownrice":{"n":"Brown rice, cooked","u":"g","p":2.7,"c":25.6,"f":1.0,"fi":1.6,"ca":10},"wholespag":{"n":"Wholewheat pasta, cooked","u":"g","p":5.3,"c":26.5,"f":0.5,"fi":4.5,"ca":15},"hummus":{"n":"Hummus","u":"g","p":7.9,"c":14.3,"f":9.6,"fi":6.0,"ca":42},"wrap":{"n":"Wholemeal wrap","u":"g","p":9.0,"c":46.0,"f":6.0,"fi":5.0,"ca":100},"falafel":{"n":"Falafel","u":"g","p":13.3,"c":31.8,"f":17.8,"fi":4.9,"ca":54},"tomatoes":{"n":"Tinned tomatoes","u":"g","p":0.9,"c":3.5,"f":0.1,"fi":1.0,"ca":15},"veg":{"n":"Mixed veg","u":"g","p":1.2,"c":7.0,"f":0.2,"fi":2.5,"ca":25},"spinach":{"n":"Spinach","u":"g","p":2.9,"c":3.6,"f":0.4,"fi":2.2,"ca":99},"salad":{"n":"Salad leaves","u":"g","p":1.0,"c":3.0,"f":0.2,"fi":1.0,"ca":30},"oil":{"n":"Cooking oil","u":"g","p":0.0,"c":0.0,"f":100.0,"fi":0.0,"ca":0},"apple":{"n":"Apple","u":"g","p":0.3,"c":13.8,"f":0.2,"fi":2.4,"ca":6},"banana":{"n":"Banana","u":"g","p":1.1,"c":22.8,"f":0.3,"fi":2.6,"ca":5},"berries":{"n":"Berries","u":"g","p":0.7,"c":12.0,"f":0.3,"fi":2.0,"ca":15},"nuts":{"n":"Mixed nuts","u":"g","p":20.0,"c":21.0,"f":54.0,"fi":7.0,"ca":90},"coconutmilk":{"n":"Coconut milk, tinned","u":"g","p":2.0,"c":3.0,"f":21.0,"fi":0.0,"ca":15},"potato":{"n":"Potato, boiled","u":"g","p":2.0,"c":17.0,"f":0.1,"fi":1.8,"ca":8},"veganmayo":{"n":"Vegan mayo","u":"g","p":0.3,"c":2.0,"f":70.0,"fi":0.0,"ca":5},"ricecake":{"n":"Rice cakes","u":"g","p":8.0,"c":82.0,"f":2.8,"fi":4.0,"ca":10}},"meals":[{"id":"b1","kind":"breakfast","title":"Tofu scramble on toast","hero":"firm tofu","serving":"150 g tofu, 2 slices wholemeal toast, spinach","cuisine":"American","items":[["tofu",150],["natyeast",8],["bread",76],["spinach",40],["oil",5]]},{"id":"b2","kind":"breakfast","title":"Peanut butter overnight oats","hero":"soya milk, oats, peanut butter","serving":"50 g oats, 200 ml soya milk, 20 g peanut butter","cuisine":"American","items":[["oats",50],["soyamilk",200],["pb",20],["banana",80]]},{"id":"b3","kind":"breakfast","title":"Chickpea flour omelette","hero":"chickpea flour","serving":"60 g chickpea flour, peppers, spinach","cuisine":"Indian","items":[["chickflour",60],["veg",80],["spinach",30],["oil",6],["natyeast",5]]},{"id":"b4","kind":"breakfast","title":"Hemp seed porridge","hero":"hemp seeds, soya milk, oats","serving":"50 g oats, 250 ml soya milk, 20 g hemp seeds","cuisine":"British","items":[["oats",50],["soyamilk",250],["hemp",20],["berries",60]]},{"id":"b5","kind":"breakfast","title":"Soya yoghurt crunch bowl","hero":"soya yoghurt, seeds","serving":"250 g soya yoghurt, granola, pumpkin seeds","cuisine":"American","items":[["soyayog",250],["granola",30],["pumpkinseed",15],["berries",80]]},{"id":"b6","kind":"breakfast","title":"Peanut butter banana toast","hero":"peanut butter, hemp seeds","serving":"2 slices wholemeal toast, peanut butter, banana","cuisine":"American","items":[["bread",76],["pb",20],["banana",80],["hemp",10]]},{"id":"b7","kind":"breakfast","title":"Berry seed overnight oats","hero":"soya milk, oats, pumpkin seeds","serving":"50 g oats, 200 ml soya milk, seeds, berries","cuisine":"American","items":[["oats",50],["soyamilk",200],["pumpkinseed",15],["berries",80]]},{"id":"l1","kind":"lunch","title":"Chickpea “tuna” sandwich","hero":"chickpeas","serving":"130 g mashed chickpeas, 2 slices wholemeal","cuisine":"British","items":[["chickpeas",130],["veganmayo",15],["bread",76],["salad",40]]},{"id":"l2","kind":"lunch","title":"Red lentil soup with bread","hero":"red lentils","serving":"200 g cooked lentils, veg, tomatoes, 1 slice","cuisine":"Turkish","items":[["lentils",200],["veg",150],["tomatoes",100],["oil",5],["bread",40]]},{"id":"l3","kind":"lunch","title":"Peanut tofu noodles","hero":"tofu, peanut butter","serving":"130 g tofu, wholewheat noodles, veg","cuisine":"Thai","items":[["tofu",130],["wholespag",180],["veg",120],["pb",20],["oil",5]]},{"id":"l4","kind":"lunch","title":"Black bean burrito bowl","hero":"black beans, quinoa","serving":"130 g black beans, 120 g quinoa","cuisine":"Mexican","items":[["blackbeans",130],["quinoa",120],["veg",80],["salad",30],["oil",5]]},{"id":"l5","kind":"lunch","title":"Falafel and hummus wrap","hero":"chickpeas","serving":"90 g falafel, 40 g hummus, wholemeal wrap","cuisine":"Lebanese","items":[["falafel",90],["hummus",40],["wrap",60],["salad",50]]},{"id":"l6","kind":"lunch","title":"Edamame rice bowl","hero":"edamame","serving":"130 g edamame, 150 g brown rice, veg","cuisine":"Japanese","items":[["edamame",130],["brownrice",150],["veg",80],["oil",5]]},{"id":"l7","kind":"lunch","title":"Tofu hummus salad wrap","hero":"tofu, chickpeas","serving":"100 g tofu, 40 g hummus, wholemeal wrap, salad","cuisine":"Lebanese","items":[["tofu",100],["hummus",40],["wrap",60],["salad",60],["veg",40]]},{"id":"l8","kind":"lunch","title":"Lentil quinoa salad","hero":"lentils, quinoa","serving":"120 g lentils, 100 g quinoa, veg, pumpkin seeds","cuisine":"Greek","items":[["lentils",120],["quinoa",100],["veg",80],["salad",40],["oil",8],["pumpkinseed",10]]},{"id":"d1","kind":"dinner","title":"Lentil bolognese","hero":"brown lentils","serving":"150 g lentils, wholewheat spaghetti","cuisine":"Italian","items":[["lentils",150],["tomatoes",200],["veg",120],["oil",8],["wholespag",180],["natyeast",8]]},{"id":"d2","kind":"dinner","title":"Chickpea and spinach curry","hero":"chickpeas","serving":"180 g chickpeas, spinach, brown rice","cuisine":"Indian","items":[["chickpeas",180],["spinach",80],["tomatoes",150],["coconutmilk",50],["veg",60],["oil",5],["brownrice",150]]},{"id":"d3","kind":"dinner","title":"Crispy tofu stir-fry","hero":"firm tofu","serving":"180 g tofu, veg, brown rice","cuisine":"Chinese","items":[["tofu",180],["veg",200],["brownrice",150],["oil",8]]},{"id":"d4","kind":"dinner","title":"Tempeh tacos","hero":"tempeh","serving":"120 g tempeh, wholemeal wraps, salsa veg","cuisine":"Mexican","items":[["tempeh",120],["wrap",70],["veg",80],["salad",40],["oil",6]]},{"id":"d5","kind":"dinner","title":"Black bean chilli with rice","hero":"black beans","serving":"200 g black beans, brown rice","cuisine":"American","items":[["blackbeans",200],["tomatoes",200],["veg",120],["oil",6],["brownrice",150]]},{"id":"d6","kind":"dinner","title":"Seitan fajitas","hero":"seitan","serving":"150 g seitan, peppers, two wraps","cuisine":"Mexican","items":[["seitan",150],["veg",180],["wrap",90],["oil",8],["salad",30]]},{"id":"d7","kind":"dinner","title":"Dal with brown rice","hero":"yellow split peas","serving":"200 g cooked split peas, brown rice","cuisine":"Indian","items":[["splitpeas",200],["tomatoes",80],["veg",60],["oil",8],["brownrice",150],["spinach",50]]},{"id":"d8","kind":"dinner","title":"Soya mince cottage pie","hero":"soya mince","serving":"40 g dry soya mince, potato topping","cuisine":"British","items":[["tvp",40],["veg",120],["tomatoes",100],["potato",250],["soyamilk",40],["oil",6],["natyeast",5]]},{"id":"d9","kind":"dinner","title":"Tofu and veg coconut curry","hero":"firm tofu","serving":"150 g tofu, veg, coconut milk, brown rice","cuisine":"Thai","items":[["tofu",150],["tomatoes",150],["coconutmilk",50],["veg",120],["brownrice",150],["oil",5],["spinach",40]]},{"id":"d10","kind":"dinner","title":"Tempeh veg stir-fry","hero":"tempeh","serving":"120 g tempeh, veg, brown rice","cuisine":"Indonesian","items":[["tempeh",120],["veg",200],["brownrice",150],["oil",8]]},{"id":"s1","kind":"snack","title":"Roasted spiced chickpeas","hero":"chickpeas","serving":"100 g cooked chickpeas, roasted","cuisine":"Indian","items":[["chickpeas",100],["oil",6]]},{"id":"s2","kind":"snack","title":"Salted edamame","hero":"edamame","serving":"120 g in pods or shelled","cuisine":"Japanese","items":[["edamame",120]]},{"id":"s3","kind":"snack","title":"Apple and peanut butter","hero":"peanut butter","serving":"1 apple, 20 g peanut butter","cuisine":"American","items":[["apple",150],["pb",20]]},{"id":"s4","kind":"snack","title":"Hummus and veg sticks","hero":"chickpeas (hummus)","serving":"60 g hummus, raw veg sticks","cuisine":"Lebanese","items":[["hummus",60],["veg",120]]},{"id":"s5","kind":"snack","title":"Pumpkin seed trail mix","hero":"pumpkin seeds, nuts","serving":"20 g seeds, 15 g nuts","cuisine":"American","items":[["pumpkinseed",20],["nuts",15]]},{"id":"s6","kind":"snack","title":"Soya peanut butter smoothie","hero":"soya milk, peanut butter, hemp","serving":"250 ml soya milk, banana, 15 g PB, 10 g hemp","cuisine":"American","items":[["soyamilk",250],["banana",100],["pb",15],["hemp",10]]},{"id":"s7","kind":"snack","title":"Peanut butter banana rice cakes","hero":"peanut butter","serving":"2 rice cakes, 20 g peanut butter, banana","cuisine":"American","items":[["ricecake",20],["pb",20],["banana",60]]}]}</script>
 <script>
 (function () {
 'use strict';
 var DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 var ROWS = [
   {k:'breakfast', label:'Breakfast', sub:'drop meals here', cls:'k-breakfast'},
-  {k:'lunch', label:'Lunch', sub:'drop meals here', cls:'k-lunch'},
-  {k:'dinner', label:'Dinner', sub:'drop meals here', cls:'k-dinner'},
+  {k:'lunch', label:'Dinner', sub:'drop meals here', cls:'k-lunch'},
+  {k:'dinner', label:'Tea', sub:'drop meals here', cls:'k-dinner'},
   {k:'snack', label:'Snacks & Extras', sub:'add as many as you like', cls:'k-snack'},
   {k:'drinks', label:'Drinks & Liquids', sub:'shade a glass at a time', cls:'k-drinks'},
   {k:'prep', label:'Prep to do', sub:'tick when done', cls:'k-prep'}
 ];
-var KIND_LABEL = {breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner', snack:'Snack'};
+var KIND_LABEL = {breakfast:'Breakfast', lunch:'Dinner', dinner:'Tea', snack:'Snack'};
+var KINDS = ['breakfast', 'lunch', 'dinner', 'snack'];
+var FAM_ALIAS = {falafel:'chickpeas', hummus:'chickpeas', chickflour:'chickpeas', soyayog:'soya', soyamilk:'soya', hemp:'seeds', pumpkinseed:'seeds', nuts:'seeds', pb:'peanut'};
 var STORE_KEY = 'veganMealPlanner.v1';
 var PREP_LINES = 5, GLASSES = 8;
 var QUOTES = [
@@ -260,7 +329,7 @@ function h(tag, props, kids) {
 }
 
 /* ---------- meal bank and nutrition ---------- */
-var MEALS = [], BY = {};
+var MEALS = [], BY = {}, ING_ALL = {};
 function shares(P, C, F) {
   var E = 4 * P + 4 * C + 9 * F;
   if (E <= 0) return [0, 0, 0];
@@ -287,23 +356,27 @@ function computeMeal(m, ING) {
     names.push(g.n + ' ' + it[1] + ' ' + (g.u || 'g'));
   });
   var ingredients = names.join(' · ');
+  var top = null, topV = -1;
+  m.items.forEach(function (it) { var g = ING[it[0]]; if (g && g.p * it[1] > topV) { topV = g.p * it[1]; top = it[0]; } });
   return {
     id: m.id, kind: m.kind, title: m.title, serving: m.serving, hero: m.hero, ingredients: ingredients,
+    cuisine: m.cuisine || 'Other', items: m.items, fam: m.fam || FAM_ALIAS[top] || top,
     protein: Math.round(P), carbs: Math.round(C), fat: Math.round(F), fibre: Math.round(Fi),
     calcium: Math.round(Ca / 5) * 5, pct: shares(P, C, F),
-    search: (m.title + ' ' + m.hero + ' ' + ingredients + ' ' + m.kind).toLowerCase()
+    search: (m.title + ' ' + m.hero + ' ' + ingredients + ' ' + (KIND_LABEL[m.kind] || m.kind) + ' ' + (m.cuisine || '')).toLowerCase()
   };
 }
 function setBank(data) {
+  ING_ALL = data.ingredients;
   MEALS = data.meals.map(function (m) { return computeMeal(m, data.ingredients); });
   BY = {}; MEALS.forEach(function (m) { BY[m.id] = m; });
 }
 
 /* ---------- state ---------- */
 function blankState() {
-  var s = {dates: {}, slots: {}, drinks: {}, prep: {}};
+  var s = {slots: {}, drinks: {}, prep: {}};
   DAYS.forEach(function (d) {
-    s.dates[d] = ''; s.drinks[d] = {n: 0, note: ''}; s.prep[d] = [];
+    s.drinks[d] = {n: 0, note: ''}; s.prep[d] = [];
     for (var i = 0; i < PREP_LINES; i++) s.prep[d].push({d: false, t: ''});
   });
   return s;
@@ -312,7 +385,6 @@ function normalise(src) {
   var s = blankState();
   if (!src || typeof src !== 'object') return s;
   DAYS.forEach(function (d) {
-    if (src.dates && typeof src.dates[d] === 'string') s.dates[d] = src.dates[d].slice(0, 20);
     var dr = src.drinks && src.drinks[d];
     if (dr) {
       s.drinks[d].n = Math.max(0, Math.min(GLASSES, parseInt(dr.n, 10) || 0));
@@ -344,12 +416,13 @@ function toast(msg) {
 }
 
 /* ---------- bank rendering ---------- */
-var filt = {q: '', kind: 'all', p: false, f: false, c: false, sort: 'default'};
+var filt = {q: '', kind: 'all', cuisine: 'all', p: false, f: false, c: false, sort: 'default'};
 var armedId = null, dragData = null;
 function visibleMeals() {
   var terms = filt.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
   var list = MEALS.filter(function (m) {
     if (filt.kind !== 'all' && m.kind !== filt.kind) return false;
+    if (filt.cuisine !== 'all' && m.cuisine !== filt.cuisine) return false;
     if (filt.p && m.protein < 20) return false;
     if (filt.f && m.fibre < 10) return false;
     if (filt.c && m.calcium < 200) return false;
@@ -395,7 +468,7 @@ function cardEl(m) {
     class: 'card k-' + m.kind + (armedId === m.id ? ' armed' : ''), draggable: 'true', tabindex: '0', role: 'button',
     'data-id': m.id, 'aria-label': m.title + ', ' + m.protein + ' grams of protein. Press Enter to select, then choose a planner slot.'
   }, [
-    h('span', {class: 'kindtag', text: KIND_LABEL[m.kind] || m.kind}),
+    h('div', {class: 'cardtop'}, [h('span', {class: 'kindtag', text: KIND_LABEL[m.kind] || m.kind}), flagEl(m.cuisine)]),
     h('h3', {text: m.title}),
     h('p', {class: 'serv', text: m.serving}),
     h('div', {class: 'cardmid'}, [
@@ -461,11 +534,11 @@ function renderSlot(key) {
 function addMeal(key, id) {
   var m = BY[id]; if (!m) return;
   (state.slots[key] = state.slots[key] || []).push({id: id, t: m.title, p: m.protein});
-  save(); renderSlot(key);
+  save(); renderSlot(key); renderTotals();
 }
 function removeAt(key, i) {
   var arr = state.slots[key]; if (!arr) return;
-  arr.splice(i, 1); save(); renderSlot(key);
+  arr.splice(i, 1); save(); renderSlot(key); renderTotals();
 }
 function moveItem(fk, idx, tk) {
   var arr = state.slots[fk]; if (!arr || !arr[idx]) return;
@@ -538,19 +611,179 @@ function prepCell(d) {
 function renderPlanner() {
   var g = $('grid'); g.textContent = ''; slotEls = {}; glassEls = {};
   g.appendChild(h('div'));
-  DAYS.forEach(function (d) {
-    var inp = h('input', {type: 'text', 'aria-label': d + ' date', placeholder: 'date', maxlength: '12'});
-    inp.value = state.dates[d];
-    inp.addEventListener('input', function () { state.dates[d] = inp.value; save(); });
-    g.appendChild(h('div', {class: 'dayh'}, [h('b', {text: d}), inp]));
-  });
+  DAYS.forEach(function (d) { g.appendChild(h('div', {class: 'dayh'}, [h('b', {text: d})])); });
   ROWS.forEach(function (r) {
     g.appendChild(h('div', {class: 'rowlabel ' + r.cls}, [h('span', {text: r.label}), h('small', {text: r.sub})]));
     DAYS.forEach(function (d) { g.appendChild(r.k === 'prep' ? prepCell(d) : slotCell(d, r)); });
   });
   Object.keys(slotEls).forEach(renderSlot);
   DAYS.forEach(function (d) { if (glassEls[d]) refreshGlasses(d); });
+  renderTotals();
 }
+
+/* ---------- cuisine flags (drawn as SVG so they show on every computer) ---------- */
+var FLAG = {american:'us', british:'gb', indian:'in', turkish:'tr', thai:'th', mexican:'mx', lebanese:'lb', japanese:'jp',
+  greek:'gr', italian:'it', chinese:'cn', indonesian:'id', french:'fr', spanish:'es', vietnamese:'vn', ethiopian:'et'};
+function star(cx, cy, R, rot) {
+  var p = [];
+  for (var i = 0; i < 10; i++) {
+    var r = i % 2 ? R * 0.382 : R, a = (rot + i * 36) * Math.PI / 180;
+    p.push((cx + r * Math.sin(a)).toFixed(2) + ',' + (cy - r * Math.cos(a)).toFixed(2));
+  }
+  return p.join(' ');
+}
+function buildSprite() {
+  function r(x, y, w, hh, f) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + hh + '" fill="' + f + '"/>'; }
+  function sym(id, body) { return '<symbol id="f-' + id + '" viewBox="0 0 30 20">' + body + '</symbol>'; }
+  function poly(pts, f) { return '<polygon points="' + pts + '" fill="' + f + '"/>'; }
+  function tri(a, b, c) { return r(0, 0, 10, 20, a) + r(10, 0, 10, 20, b) + r(20, 0, 10, 20, c); }
+  var S = '', i, j;
+  S += sym('it', tri('#009246', '#fff', '#CE2B37'));
+  S += sym('fr', tri('#0055A4', '#fff', '#EF4135'));
+  S += sym('mx', tri('#006847', '#fff', '#CE1126') + '<circle cx="15" cy="10" r="2.6" fill="#A8793A"/>');
+  S += sym('in', r(0, 0, 30, 6.67, '#FF9933') + r(0, 6.67, 30, 6.67, '#fff') + r(0, 13.33, 30, 6.67, '#138808') +
+    '<circle cx="15" cy="10" r="2.5" fill="none" stroke="#000080" stroke-width=".7"/>');
+  S += sym('jp', r(0, 0, 30, 20, '#fff') + '<circle cx="15" cy="10" r="6" fill="#BC002D"/>');
+  S += sym('th', r(0, 0, 30, 20, '#A51931') + r(0, 3.33, 30, 13.34, '#F4F5F8') + r(0, 6.67, 30, 6.66, '#2D2A4A'));
+  S += sym('id', r(0, 0, 30, 10, '#CE1126') + r(0, 10, 30, 10, '#fff'));
+  S += sym('es', r(0, 0, 30, 5, '#AA151B') + r(0, 5, 30, 10, '#F1BF00') + r(0, 15, 30, 5, '#AA151B'));
+  S += sym('et', r(0, 0, 30, 6.67, '#078930') + r(0, 6.67, 30, 6.67, '#FCDD09') + r(0, 13.33, 30, 6.67, '#DA121A'));
+  S += sym('vn', r(0, 0, 30, 20, '#DA251D') + poly(star(15, 10.6, 6, 0), '#FFFF00'));
+  S += sym('cn', r(0, 0, 30, 20, '#DE2910') + poly(star(5.5, 5.5, 3.4, 0), '#FFDE00') + poly(star(11, 2.2, 1.1, 20), '#FFDE00') +
+    poly(star(13, 4.4, 1.1, 40), '#FFDE00') + poly(star(13, 7.4, 1.1, 60), '#FFDE00') + poly(star(11, 9.6, 1.1, 80), '#FFDE00'));
+  S += sym('tr', r(0, 0, 30, 20, '#E30A17') + '<circle cx="11.5" cy="10" r="5" fill="#fff"/><circle cx="12.9" cy="10" r="4" fill="#E30A17"/>' +
+    poly(star(17.2, 10, 2.4, 90), '#fff'));
+  S += sym('lb', r(0, 0, 30, 20, '#fff') + r(0, 0, 30, 5, '#ED1C24') + r(0, 15, 30, 5, '#ED1C24') +
+    poly('15,3 11.6,8.4 18.4,8.4', '#00A651') + poly('15,5.6 10.8,11.6 19.2,11.6', '#00A651') + poly('15,8.4 10.2,14.6 19.8,14.6', '#00A651') + r(14.6, 14.4, 0.8, 2.2, '#00A651'));
+  var gr = r(0, 0, 30, 20, '#0D5EAF');
+  for (i = 1; i < 9; i += 2) gr += r(0, (i * 20 / 9).toFixed(2), 30, (20 / 9).toFixed(2), '#fff');
+  gr += r(0, 0, 11.11, 11.11, '#0D5EAF') + r(4.44, 0, 2.23, 11.11, '#fff') + r(0, 4.44, 11.11, 2.23, '#fff');
+  S += sym('gr', gr);
+  var us = '';
+  for (i = 0; i < 13; i++) us += r(0, (i * 20 / 13).toFixed(2), 30, (20 / 13 + 0.02).toFixed(2), i % 2 ? '#fff' : '#B22234');
+  us += r(0, 0, 13, 10.77, '#3C3B6E');
+  for (i = 0; i < 4; i++) for (j = 0; j < 5; j++) us += '<circle cx="' + (1.7 + j * 2.4) + '" cy="' + (1.7 + i * 2.4) + '" r=".6" fill="#fff"/>';
+  S += sym('us', us);
+  S += sym('gb', r(0, 0, 30, 20, '#012169') + '<path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" stroke-width="1.5"/>' +
+    '<path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6"/><path d="M15 0V20M0 10H30" stroke="#C8102E" stroke-width="3.4"/>');
+  S += sym('globe', r(0, 0, 30, 20, '#E3EDF2') + '<circle cx="15" cy="10" r="6.5" fill="none" stroke="#2F6F8F" stroke-width="1"/>' +
+    '<ellipse cx="15" cy="10" rx="2.8" ry="6.5" fill="none" stroke="#2F6F8F" stroke-width=".8"/><path d="M8.5 10h13" stroke="#2F6F8F" stroke-width=".8"/>');
+  document.body.insertAdjacentHTML('afterbegin', '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">' + S + '</svg>');
+}
+function flagEl(name) {
+  var id = FLAG[String(name).toLowerCase()] || 'globe';
+  var s = document.createElement('span');
+  s.className = 'cuisine';
+  s.innerHTML = '<svg class="flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false"><use href="#f-' + id + '"></use></svg>';
+  s.appendChild(document.createTextNode(name));
+  return s;
+}
+function buildCuisines() {
+  var sel = $('cuisine'), counts = {};
+  MEALS.forEach(function (m) { counts[m.cuisine] = (counts[m.cuisine] || 0) + 1; });
+  sel.textContent = '';
+  sel.appendChild(h('option', {value: 'all', text: 'All cuisines'}));
+  Object.keys(counts).sort(function (a, b) { return a.localeCompare(b); }).forEach(function (c) {
+    sel.appendChild(h('option', {value: c, text: c + ' (' + counts[c] + ')'}));
+  });
+  if (!counts[filt.cuisine]) filt.cuisine = 'all';
+  sel.value = filt.cuisine;
+}
+
+/* ---------- week's ingredient totals ---------- */
+function fmtAmt(g, u) {
+  if (g >= 1000) return (Math.round(g / 100) / 10) + (u === 'ml' ? ' l' : ' kg');
+  return Math.round(g) + ' ' + (u || 'g');
+}
+function renderTotals() {
+  var tot = {}, n = 0, P = 0, Fi = 0, Ca = 0, list = $('totList');
+  Object.keys(state.slots).forEach(function (key) {
+    (state.slots[key] || []).forEach(function (it) {
+      var m = BY[it.id]; if (!m) return;
+      n++; P += m.protein; Fi += m.fibre; Ca += m.calcium;
+      m.items.forEach(function (x) { tot[x[0]] = (tot[x[0]] || 0) + x[1]; });
+    });
+  });
+  var keys = Object.keys(tot).filter(function (k) { return ING_ALL[k]; })
+    .sort(function (a, b) { return ING_ALL[a].n.localeCompare(ING_ALL[b].n); });
+  list.textContent = '';
+  if (!keys.length) list.appendChild(h('li', {class: 'totempty', text: 'Add meals to the planner and the totals for the week will appear here.'}));
+  keys.forEach(function (k) {
+    list.appendChild(h('li', null, [h('span', {class: 'tn', text: ING_ALL[k].n}), h('b', {class: 'ta', text: fmtAmt(tot[k], ING_ALL[k].u)})]));
+  });
+  $('totSummary').textContent = n ? n + (n === 1 ? ' meal' : ' meals') + ' planned · protein ' + P + ' g · fibre ' + Fi + ' g · calcium ' + Ca.toLocaleString('en-GB') + ' mg' : '';
+}
+
+/* ---------- auto-fill ---------- */
+var lastAuto = null;
+function shuffle(a) {
+  a = a.slice();
+  for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function mealsIn(day, kind) {
+  return (state.slots[day + '|' + kind] || []).map(function (x) { return BY[x.id]; }).filter(Boolean);
+}
+function autoFill(kinds, replace) {
+  var before = JSON.stringify(state.slots), repeats = false, added = 0, done = [];
+  KINDS.forEach(function (kind) {
+    if (kinds.indexOf(kind) < 0) return;
+    var pool = MEALS.filter(function (m) { return m.kind === kind; });
+    if (!pool.length) return;
+    var prev = {}, days = [];
+    DAYS.forEach(function (d, i) {
+      var key = d + '|' + kind, cur = state.slots[key] || [];
+      if (replace) { if (cur.length) prev[i] = cur[0].id; state.slots[key] = []; cur = []; }
+      if (!cur.length) days.push(i);
+    });
+    if (!days.length) return;
+    var used = {};
+    DAYS.forEach(function (d) { mealsIn(d, kind).forEach(function (m) { used[m.id] = 1; }); });
+    var fresh = shuffle(pool.filter(function (m) { return !used[m.id]; })), pick = [];
+    while (pick.length < days.length) {
+      if (!fresh.length) { repeats = true; fresh = shuffle(pool); }
+      pick.push(fresh.shift());
+    }
+    var cost = function (arr) {
+      var c = 0;
+      arr.forEach(function (m, i) {
+        var di = days[i];
+        KINDS.forEach(function (k2) {
+          if (k2 !== kind) mealsIn(DAYS[di], k2).forEach(function (o) { if (o.fam === m.fam) c += 2; });
+        });
+        [di - 1, di + 1].forEach(function (dj) {
+          if (dj < 0 || dj > 6) return;
+          var idx = days.indexOf(dj), nb = idx >= 0 ? [arr[idx]] : mealsIn(DAYS[dj], kind);
+          nb.forEach(function (o) { if (o.id === m.id) c += 6; else if (o.fam === m.fam) c += 3; });
+        });
+        if (prev[di] === m.id) c += 1;
+      });
+      return c;
+    };
+    var best = pick, bc = 1e9;
+    for (var t = 0; t < 400; t++) {
+      var arr = shuffle(pick), c = cost(arr);
+      if (c < bc) { bc = c; best = arr; if (c === 0) break; }
+    }
+    best.forEach(function (m, i) {
+      var key = DAYS[days[i]] + '|' + kind;
+      (state.slots[key] = state.slots[key] || []).push({id: m.id, t: m.title, p: m.protein});
+      added++;
+    });
+    done.push(kind);
+  });
+  if (!added) { toast('Nothing to fill. Those rows already have meals; tick "Replace meals" to start again.'); return; }
+  lastAuto = before; $('btnUndo').hidden = false;
+  save(); Object.keys(slotEls).forEach(renderSlot); renderTotals();
+  var names = done.map(function (k) { return k === 'snack' ? 'Snacks' : KIND_LABEL[k]; });
+  toast('Added ' + added + ' meals to ' + names.join(', ') + '.' + (repeats ? ' Some meals repeat because that row has fewer meals in the bank than days.' : ' No meal repeats in a row.'));
+}
+function undoAuto() {
+  if (!lastAuto) return;
+  state.slots = JSON.parse(lastAuto); lastAuto = null; $('btnUndo').hidden = true;
+  save(); Object.keys(slotEls).forEach(renderSlot); renderTotals(); toast('Auto-fill undone.');
+}
+function hideUndo() { lastAuto = null; $('btnUndo').hidden = true; }
 
 /* ---------- save / load / pdf ---------- */
 function ymd() { var t = new Date(); return t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2); }
@@ -569,7 +802,7 @@ function loadPlanFile(file) {
     try {
       var obj = JSON.parse(rd.result);
       if (!obj || obj.app !== 'vegan-meal-planner' || !obj.state) throw new Error('not a plan');
-      state = normalise(obj.state); save(); renderPlanner(); toast('Plan loaded.');
+      state = normalise(obj.state); hideUndo(); save(); renderPlanner(); toast('Plan loaded.');
     } catch (e) { toast('That file is not a saved meal plan.'); }
   };
   rd.readAsText(file);
@@ -593,6 +826,19 @@ function wire() {
   $('fF').addEventListener('change', function (e) { filt.f = e.target.checked; renderBank(true); });
   $('fC').addEventListener('change', function (e) { filt.c = e.target.checked; renderBank(true); });
   $('sort').addEventListener('change', function (e) { filt.sort = e.target.value; renderBank(true); });
+  $('cuisine').addEventListener('change', function (e) { filt.cuisine = e.target.value; renderBank(true); });
+  var dlg = $('autoDlg');
+  $('btnAuto').addEventListener('click', function () {
+    $('autoMsg').textContent = '';
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  });
+  $('autoCancel').addEventListener('click', function () { dlg.close(); });
+  $('autoGo').addEventListener('click', function () {
+    var kinds = KINDS.filter(function (k) { return $('auto-' + k).checked; });
+    if (!kinds.length) { $('autoMsg').textContent = 'Choose at least one meal time.'; return; }
+    dlg.close(); autoFill(kinds, $('autoReplace').checked);
+  });
+  $('btnUndo').addEventListener('click', undoAuto);
   var list = $('bankList');
   list.addEventListener('scroll', function () { $('topBtn').hidden = list.scrollTop < 500; });
   $('topBtn').addEventListener('click', function () { list.scrollTo({top: 0, behavior: 'smooth'}); });
@@ -604,19 +850,19 @@ function wire() {
   $('btnLoad').addEventListener('click', function () { $('fileLoad').click(); });
   $('fileLoad').addEventListener('change', function (e) { loadPlanFile(e.target.files[0]); e.target.value = ''; });
   $('btnClear').addEventListener('click', function () {
-    if (window.confirm('Clear every meal, note and tick from this week?')) { state = blankState(); save(); renderPlanner(); toast('Week cleared.'); }
+    if (window.confirm('Clear every meal, note and tick from this week?')) { state = blankState(); hideUndo(); save(); renderPlanner(); toast('Week cleared.'); }
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && armedId) toggleArm(armedId); });
 }
 
 function init() {
   setBank(JSON.parse($('meal-data').textContent));
-  loadStored(); wire(); renderBank(false); renderPlanner();
+  buildSprite(); loadStored(); wire(); buildCuisines(); renderBank(false); renderPlanner();
   $('quote').textContent = '“' + weeklyQuote() + '”';
   window.MealPlannerDebug = {meals: function () { return MEALS; }, state: function () { return state; }};
   if (/^https?:$/.test(location.protocol) && window.fetch) {
     fetch('meals.json', {cache: 'no-store'}).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
-      if (d && d.ingredients && Array.isArray(d.meals) && d.meals.length) { setBank(d); renderBank(false); renderPlanner(); }
+      if (d && d.ingredients && Array.isArray(d.meals) && d.meals.length) { setBank(d); buildCuisines(); renderBank(false); renderPlanner(); }
     }).catch(function () {});
   }
 }
