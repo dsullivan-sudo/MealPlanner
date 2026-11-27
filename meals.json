@@ -1171,31 +1171,6 @@
     ]
    ]
   },
-    {
-   "id": "s8",
-   "kind": "test",
-   "title": "test",
-   "hero": "soya milk, oats, peanut butter",
-   "serving": "50 g oats, 200 ml soya milk, 20 g peanut butter",
-   "items": [
-    [
-     "oats",
-     50
-    ],
-    [
-     "soyamilk",
-     200
-    ],
-    [
-     "pb",
-     20
-    ],
-    [
-     "banana",
-     80
-    ]
-   ]
-  },
   {
    "id": "s7",
    "kind": "snack",
