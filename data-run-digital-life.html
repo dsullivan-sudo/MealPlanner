@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data Run: Digital Life</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#1E2240; --panel:#353853; --text:#FFFFFF; --muted:#C7C8CF; --ink:#1E2240;
+  --ok:#0072B2; --no:#B34700; --cyan:#00AEC5; --pink:#D4547E; --orange:#F47B20; --green:#7DC242;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;font-size:18px}
+body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:12px;
+  background:linear-gradient(90deg,var(--cyan) 0 25%,var(--pink) 25% 50%,var(--orange) 50% 75%,var(--green) 75% 100%)}
+main{max-width:920px;margin:0 auto;padding:16px 16px 40px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+#logo{height:56px;max-width:140px;object-fit:contain;display:none}
+header h1{margin:0;font-size:1.6rem;line-height:1.1}
+header p{margin:4px 0 0;color:var(--cyan);font-size:.9rem;font-weight:bold}
+.stats{margin-left:auto;display:flex;gap:10px;font-weight:bold}
+.chip{background:var(--panel);border-radius:999px;padding:6px 14px;white-space:nowrap}
+.bar{height:10px;background:var(--panel);border-radius:99px;overflow:hidden;margin-bottom:16px}
+.bar>i{display:block;height:100%;width:0;background:var(--cyan);transition:width .5s ease}
+.card{border:2px solid var(--cyan);border-radius:16px;padding:20px;animation:pop .35s ease}
+.card h2{margin:0 0 8px;color:var(--text)}
+.hint{color:var(--cyan);margin:0 0 14px;font-weight:bold}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+button{font:inherit;cursor:pointer}
+.tile{--c:var(--cyan);background:#fff;color:var(--ink);border:3px solid transparent;border-top:8px solid var(--c);border-radius:10px;
+  padding:12px;text-align:left;min-height:56px;transition:transform .15s,box-shadow .15s}
+.tile:hover{transform:translateY(-2px);box-shadow:0 4px 0 var(--c)}
+.tile.sel{background:#FFF1B8;outline:4px dotted var(--ink)}
+.tile.done,.tile.right{background:#D3E8F8;outline:4px solid var(--ok);--c:var(--ok)}
+.tile.done{cursor:default;animation:glow .6s ease}
+.tile.wrong,.tile.miss{background:#FBE0CC;outline:4px dashed var(--no);--c:var(--no)}
+.tile.sel::after,.tile.done::after,.tile.right::after,.tile.wrong::after,.tile.miss::after{display:block;margin-top:6px;font-size:.85rem;font-weight:bold}
+.tile.sel::after{content:"● Selected"}
+.tile.done::after{content:"✔ Matched"}
+.tile.right::after{content:"✔ Correct answer"}
+.tile.miss::after{content:"✘ Your answer"}
+.tile.wrong::after{content:"✘ Not a match"}
+.tile.wrong{animation:shake .4s}
+.opts{display:grid;gap:10px;margin-top:14px}
+.q{font-size:1.25rem;font-weight:bold}
+.fb{margin-top:14px;padding:12px;border-radius:10px;background:var(--panel);min-height:48px}
+.go{margin-top:16px;background:var(--cyan);color:var(--ink);border:0;border-radius:999px;padding:12px 28px;font-weight:bold;font-size:1.05rem}
+.go:hover{filter:brightness(1.1)}
+.big{font-size:3rem;margin:0}
+.sum{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.shot{margin-top:12px;color:var(--orange);font-weight:bold}
+.sub{color:var(--muted);font-size:.9rem;margin-top:10px}
+.conf{position:fixed;top:-20px;font-size:1.6rem;pointer-events:none;animation:fall linear forwards}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes glow{from{box-shadow:0 0 0 0 var(--ok)}to{box-shadow:0 0 0 18px transparent}}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media (max-width:620px){.cols{grid-template-columns:1fr}.stats{display:none}#logo{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+
+.stage{position:relative;max-width:780px;margin:0 auto;--u:1px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;border:2px solid var(--cyan);background:#070B24;touch-action:pan-y}
+.hud{position:absolute;left:2px;right:2px;top:2px;padding:calc(var(--u)*8) calc(var(--u)*10) calc(var(--u)*10);background:linear-gradient(rgba(7,11,36,.95),rgba(7,11,36,.84));border-radius:10px 10px 0 0;pointer-events:none}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:calc(var(--u)*6)}
+.hrow .chip{font-size:max(12px,calc(var(--u)*18));padding:calc(var(--u)*3) calc(var(--u)*14);font-weight:bold}
+.hlvl{font-size:max(10px,calc(var(--u)*14));color:var(--cyan);font-weight:bold;text-align:center}
+.qtext{font-size:max(12px,calc(var(--u)*22));font-weight:bold;line-height:1.2;margin-bottom:calc(var(--u)*8)}
+.achips{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(var(--u)*8)}
+.ach{--c:var(--cyan);pointer-events:auto;position:relative;display:flex;gap:calc(var(--u)*6);align-items:flex-start;text-align:left;background:#fff;color:var(--ink);border:0;border-top:calc(var(--u)*6) solid var(--c);border-radius:calc(var(--u)*8);padding:calc(var(--u)*6);font:inherit;font-size:max(10px,calc(var(--u)*14));line-height:1.15;min-height:calc(var(--u)*54);cursor:pointer}
+.ach i{flex:none;font-style:normal;font-weight:bold;width:calc(var(--u)*24);height:calc(var(--u)*24);border-radius:50%;background:var(--c);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:max(11px,calc(var(--u)*15))}
+.ach.here{outline:3px dotted #fff;outline-offset:1px}
+.ach.right{background:#D3E8F8;outline:4px solid var(--ok)}
+.ach.miss{background:#FBE0CC;outline:4px dashed var(--no)}
+.ach.right::after,.ach.miss::after{position:absolute;top:calc(var(--u)*2);right:calc(var(--u)*5);font-weight:bold;font-size:max(12px,calc(var(--u)*16))}
+.ach.right::after{content:"✔"}
+.ach.miss::after{content:"✘"}
+.ov{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:12px;background:rgba(7,11,36,.82);border-radius:12px;z-index:3}
+.ovc{background:var(--bg);border:2px solid var(--cyan);border-radius:14px;padding:16px;max-width:520px;text-align:left}
+.ovc h2{margin:0 0 6px}
+.toast{position:absolute;top:calc(var(--u)*196);left:50%;transform:translateX(-50%);padding:6px 16px;border-radius:10px;font-weight:bold;display:none;max-width:92%;text-align:center;font-size:max(12px,calc(var(--u)*18));z-index:2}
+.toast.ok{background:#D3E8F8;color:var(--ink);border:3px solid var(--ok)}
+.toast.no{background:#FBE0CC;color:var(--ink);border:3px dashed var(--no)}
+.ctl{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;justify-content:center}
+.ctl .go{margin-top:0;padding:10px 22px;font-size:1rem}
+.go.on{outline:4px solid #FFE600;outline-offset:2px}
+.bigscore{font-size:2.8rem;font-weight:bold;margin:6px 0;color:var(--cyan)}
+.ul2{text-align:left;padding-left:20px;line-height:1.5}
+@media (max-width:560px){.achips{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1 id="gTitle"></h1><p id="gSub"></p></div>
+    <div class="stats"><span class="chip" id="count"></span></div>
+    <img id="logo" alt="School logo">
+  </header>
+  <div class="bar"><i id="prog"></i></div>
+  <div id="app"></div>
+</main>
+<script>
+/* =====================================================
+   TEACHER: EDIT ONLY THIS BLOCK TO CHANGE THE CONTENT
+   ===================================================== */
+const GAME = {
+  title: "Data Run: Digital Life",
+  module: "",          // e.g. "Module 3" (leave empty to hide)
+  lesson: "",          // e.g. "Lesson 5" (leave empty to hide)
+  subtitle: "Files, email, the web and staying safe online",
+  help: "Some questions are about cyberbullying, including the real case of Amanda Todd. If anything worries or upsets you, tell a trusted adult.",
+  helpEnd: "Some questions are about cyberbullying, including the real case of Amanda Todd. If anything worries or upsets you, tell a trusted adult. Childline is free to call on 0800 1111.",
+  logo: "data:image/png;base64,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",   // school logo from the lesson template
+
+  timeLimit: 180,      // the whole run lasts this many seconds (180 = 3 minutes)
+  boostFactor: 7,      // pressing Boost makes the firewall arrive this many times faster
+  boostBonus: 0.5,     // a right answer with Boost scores this much extra (0.5 = 50% more points)
+
+  // A run works through the levels in order, easiest first, picking "pick" random questions from each pool. When those are used up
+  // it keeps going with more questions from the harder levels until the time runs out.
+  // "seconds" is how long the student has to read the question and choose a lane before the firewall arrives (shorter = harder).
+  // "points" is what a right answer scores at that level. Each question has exactly 4 options (A to D).
+  // "a" is the position of the right option, starting at 0.
+  tiers: [
+    { name: "Warm-up", pick: 3, seconds: 14, points: 100, questions: [
+      { q: "What is ‘email’ short for?", o: ["Electronic mail", "Easy mail", "Extra mail", "Emergency mail"], a: 0 },
+      { q: "What does URL stand for?", o: ["Uniform Resource Locator", "Universal Radio Link", "United Resource List", "User Reference Letter"], a: 0 },
+      { q: "What is an internet browser?", o: ["A program used to view web pages", "A type of computer virus", "A device that stores your files", "A website for sending email"], a: 0 },
+      { q: "Which of these is a web browser?", o: ["Microsoft Edge", "Microsoft Word", "Windows", "Notepad"], a: 0 },
+      { q: "What is a search engine?", o: ["A website that finds pages matching the words you type", "A program that repairs your computer", "A type of keyboard", "A tool for sending emails"], a: 0 },
+      { q: "Which of these is a search engine?", o: ["Google", "Microsoft Paint", "Calculator", "Windows"], a: 0 },
+      { q: "What is a network?", o: ["Computers and devices connected so they can share data", "A single computer on its own", "A type of software", "A cable that charges your phone"], a: 0 },
+      { q: "Why do we have user IDs and passwords?", o: ["To make sure only the right person can use an account", "To make the computer faster", "To make files smaller", "To stop the screen going dark"], a: 0 },
+      { q: "What is a folder used for?", o: ["Keeping related files together", "Making a file bigger", "Playing music", "Sending emails"], a: 0 },
+      { q: "Which keys open the snipping tool so you can capture part of your screen?", o: ["Windows key + Shift + S", "Ctrl + Alt + Delete", "Alt + F4", "Ctrl + P"], a: 0 },
+      { q: "What is cyberbullying?", o: ["Using technology to hurt, upset or threaten someone", "Playing online games with friends", "Sending a school email", "Searching the internet for homework"], a: 0 },
+      { q: "Who could you tell if you are being cyberbullied?", o: ["A trusted adult, such as a parent, carer or teacher", "Nobody", "Only the person bullying you", "A stranger online"], a: 0 },
+      { q: "What does blocking someone online do?", o: ["Stops them contacting you", "Deletes their account", "Makes their messages bigger", "Sends them a gift"], a: 0 },
+      { q: "Which of these is personal information you should keep private?", o: ["Your home address", "Your favourite colour", "What your pet looks like", "Your favourite film"], a: 0 },
+      { q: "Which devices can cyberbullying happen on?", o: ["Phones, tablets, computers and games consoles", "Only mobile phones", "Only school computers", "Only games consoles"], a: 0 },
+      { q: "What does CC mean in an email?", o: ["Carbon copy", "Computer code", "Close chat", "Copy cat"], a: 0 },
+      { q: "What does a red wavy line under a word in a document usually mean?", o: ["It may be spelled wrong", "The word is in bold", "The word is a link", "The word is correct"], a: 0 },
+      { q: "What is a social network?", o: ["A website or app for sharing messages, photos and videos with others", "A cable joining two computers", "A program for writing documents", "A type of email"], a: 0 } ] },
+    { name: "Building up", pick: 4, seconds: 12, points: 150, questions: [
+      { q: "What is the file extension in the file name ‘essay.docx’?", o: [".docx", "essay", ".essay", "doc"], a: 0 },
+      { q: "A folder inside another folder is called a…", o: ["Subfolder", "Superfolder", "File extension", "Shortcut"], a: 0 },
+      { q: "Which is the best file name for your Year 8 science homework?", o: ["Science_Homework_Year8.docx", "stuff.docx", "asdfgh.docx", "new new new.docx"], a: 0 },
+      { q: "After you snip with Windows key + Shift + S, how can you paste the snip into OneNote?", o: ["Press Ctrl + V, or right-click and choose Paste", "Press Ctrl + X", "Press Alt + Tab", "Switch the computer off and on"], a: 0 },
+      { q: "What does ‘Forward’ do to an email?", o: ["Sends a copy of the email you received to someone else", "Deletes the email", "Replies to the sender only", "Marks the email as spam"], a: 0 },
+      { q: "What does ‘Reply’ do?", o: ["Sends your answer to the person who sent the email", "Sends your answer to everyone who got the email", "Sends the email to a new person", "Saves the email as a draft"], a: 0 },
+      { q: "What does ‘Reply All’ do?", o: ["Sends your answer to everyone on the email", "Sends your answer only to the sender", "Deletes the email for everyone", "Forwards it to your teacher"], a: 0 },
+      { q: "When you CC someone in an email, who can see that they were copied in?", o: ["Everyone who receives the email", "Only the sender", "Only the person in CC", "Nobody"], a: 0 },
+      { q: "What do you need to fill in to send an email?", o: ["The address in the To box, a subject and your message", "Only the subject", "Only the attachment", "Your password"], a: 0 },
+      { q: "What is an attachment on an email?", o: ["A file sent along with the message", "The person’s name", "The subject line", "A password"], a: 0 },
+      { q: "What should you do if you think someone else knows your password?", o: ["Change it and tell a trusted adult or teacher", "Keep using it", "Share it with a friend", "Write it on your bag"], a: 0 },
+      { q: "You search for ‘jaguar’ and see cars and animals. How can you refine the search to find the animal?", o: ["Add more specific words, such as ‘jaguar big cat rainforest’", "Type the same word again", "Use capital letters only", "Close the browser"], a: 0 },
+      { q: "What do quotation marks around words in a search do?", o: ["Search for that exact phrase", "Make the search faster", "Search only images", "Block adverts"], a: 0 },
+      { q: "What is a ‘bystander’ in cyberbullying?", o: ["Someone who sees the bullying happening online", "The person doing the bullying", "The person being bullied", "A teacher"], a: 0 },
+      { q: "What is phishing?", o: ["Fake messages that try to trick you into giving away your details", "Catching fish using a computer", "A way to speed up the internet", "A school email"], a: 0 },
+      { q: "Which could be a sign that someone is being cyberbullied?", o: ["Seems upset after using their phone or device", "Gets a good mark in a test", "Joins a new football team", "Wears a new coat"], a: 0 },
+      { q: "What does setting a social media account to ‘private’ do?", o: ["Only people you approve can see your posts", "Deletes your posts", "Makes your account faster", "Gives you free followers"], a: 0 },
+      { q: "What does ‘reporting’ a post or an account do?", o: ["Tells the platform’s team so they can check it and act", "Deletes your own account", "Makes the post go viral", "Blocks you from the internet"], a: 0 },
+      { q: "Which feature checks your spelling and grammar in a word processor?", o: ["Spelling and grammar check", "Find and replace", "Word count", "Page break"], a: 0 },
+      { q: "Which of these is unacceptable online behaviour?", o: ["Spreading rumours about someone", "Asking permission before sharing a photo", "Using a strong password", "Logging out when you finish"], a: 0 },
+      { q: "Which is an example of cyberbullying by message?", o: ["Sending nasty or threatening messages", "Sending a thank-you email", "Sending homework to your teacher", "Sending a birthday card"], a: 0 },
+      { q: "Repeatedly sending someone unkind or threatening messages is called…", o: ["Harassment", "Homework", "Backing up", "Streaming"], a: 0 },
+      { q: "Amanda Todd’s story is often used to teach about the harm online bullying and blackmail can cause. Which country was she from?", o: ["Canada", "Australia", "Germany", "Brazil"], a: 0 },
+      { q: "What is the main benefit of a network?", o: ["Sharing files, printers and an internet connection", "Making screens brighter", "Making a computer louder", "Stopping every virus"], a: 0 } ] },
+    { name: "Challenge", pick: 3, seconds: 10, points: 200, questions: [
+      { q: "In 2012 Amanda Todd shared her story online in a video. How did she tell it?", o: ["By holding up handwritten flash cards", "With a music video", "With a cartoon", "With a news report"], a: 0 },
+      { q: "Amanda Todd was blackmailed online by someone who threatened to share a private image. What is the safest thing to do if this happens to you?", o: ["Do not give in, keep the evidence and tell a trusted adult straight away", "Send more pictures", "Pay them", "Keep it secret"], a: 0 },
+      { q: "What lesson do many people take from Amanda Todd’s story?", o: ["Online bullying and blackmail can seriously harm people, so tell a trusted adult and support others", "Online bullying is only a joke", "It only affects adults", "Deleting your account solves everything"], a: 0 },
+      { q: "What is catfishing?", o: ["Pretending to be someone else online to trick people", "Fishing with a computer", "Sending lots of spam", "Hacking a games console"], a: 0 },
+      { q: "You get a message: ‘You have won a phone! Click here and enter your bank details.’ What is it most likely to be?", o: ["A scam", "A school notice", "A reward from your teacher", "A software update"], a: 0 },
+      { q: "Which is a sign of a phishing email?", o: ["Urgent wording, spelling mistakes and a link asking for your password", "A message from your teacher with homework", "An email you were expecting from a friend", "A newsletter you chose to get"], a: 0 },
+      { q: "Someone you met online says they are 14, but their photos and stories keep changing. What should you be most worried about?", o: ["They may be catfishing, pretending to be someone they are not", "They are very shy", "They have a slow connection", "They are a good friend"], a: 0 },
+      { q: "In the web address www.bbc.co.uk, which part is the domain name?", o: ["bbc.co.uk", "www", "https", "The dots"], a: 0 },
+      { q: "What does the padlock next to a web address mean?", o: ["The connection is encrypted, but that does not guarantee the site is safe", "The site is certainly safe to trust", "The site is free to use", "The site is blocked"], a: 0 },
+      { q: "Which pair shows one benefit and one risk of social media?", o: ["Keeping in touch with friends, and meeting strangers who may not be who they say", "Faster Wi-Fi, and free phones", "Better grades, and less homework", "Longer battery life, and bigger screens"], a: 0 },
+      { q: "Which is the safest way to use social media?", o: ["Keep your account private, think before you post and do not accept requests from strangers", "Post your address so friends can visit", "Share your password with a best friend", "Accept every friend request"], a: 0 },
+      { q: "Cyberbullying can happen through messages, images and video. Which is an example involving video?", o: ["Posting an embarrassing video of someone without their permission", "Sending a thank-you note", "Sharing a recipe", "Watching a tutorial"], a: 0 },
+      { q: "What does ‘trolling’ mean?", o: ["Posting upsetting or provoking comments online to annoy people", "Walking in a forest", "Backing up files", "Deleting spam"], a: 0 },
+      { q: "What is an ‘upstander’?", o: ["Someone who helps or stands up for a person being bullied", "Someone who bullies", "Someone who ignores it", "Someone who deletes accounts"], a: 0 },
+      { q: "Before you block someone who sent you nasty messages, what should you do?", o: ["Take a screenshot as evidence", "Delete everything straight away", "Reply with nasty messages", "Post the messages publicly"], a: 0 },
+      { q: "A friend avoids school, seems anxious about their phone and stops joining in. What is the best thing to do?", o: ["Ask kindly if they are okay and encourage them to tell a trusted adult", "Ignore it", "Tell everyone in class", "Take their phone"], a: 0 },
+      { q: "Which online behaviour is unacceptable?", o: ["Using someone else’s account without permission", "Asking a friend before posting their photo", "Logging out of a shared computer", "Using a strong password"], a: 0 },
+      { q: "An email was sent to the whole class, but you only want to answer your teacher. Which button should you press?", o: ["Reply", "Reply All", "Forward", "Delete"], a: 0 },
+      { q: "Why should you be careful with ‘Reply All’?", o: ["Your message goes to everyone on the email, including people who do not need it", "It deletes the original email", "It makes the email bigger", "It forwards the email to your teacher"], a: 0 },
+      { q: "What does BCC do?", o: ["Sends a copy without other people seeing the address", "Blocks the email", "Makes a backup", "Checks spelling"], a: 0 },
+      { q: "Which sentence is punctuated correctly?", o: ["I can’t find my homework, so I’ll ask Mr Khan.", "i cant find my homework so ill ask mr khan", "I can’t find my homework so I’ll ask mr Khan", "I cant find my homework, so Ill ask Mr khan."], a: 0 },
+      { q: "Which of these is personal data?", o: ["Your full name, address and date of birth", "The weather today", "The name of a famous film", "The capital of France"], a: 0 },
+      { q: "Which shows a file stored inside a folder inside another folder?", o: ["Documents / Year 8 / Science / Homework.docx", "Homework.docx", "Documents.docx / Year 8", "Science Year 8 Documents"], a: 0 },
+      { q: "What is ‘impersonation’ online?", o: ["Pretending to be someone else, often with a fake account, to cause harm", "Sharing your own photos", "Logging in with your own password", "Making a backup"], a: 0 },
+      { q: "A group chat keeps leaving one person out on purpose. What is this an example of?", o: ["Exclusion, a form of cyberbullying", "A good way to chat", "Spell checking", "Backing up files"], a: 0 } ] }
+  ]
+};
+/* ============== END OF EDITABLE CONTENT ============== */
+
+const $ = id => document.getElementById(id);
+const app = $("app");
+const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; };
+
+// Random seed: a new 6-digit seed is made on every launch and "Play again", so each run has different questions.
+// (To give a whole class the same run, open the file with the seed on the end, e.g. data-run.html#123456)
+let seed = 0, rnd = Math.random, firstLaunch = true;
+const newSeed = () => { const a = new Uint32Array(1); window.crypto && crypto.getRandomValues ? crypto.getRandomValues(a) : a[0] = Math.random() * 4294967296; return a[0] % 900000 + 100000; };
+const mulberry32 = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const shuffle = a => { a = a.slice(); for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(rnd() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; };
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------------- Sound (made with code, so no audio files are needed) ---------------- */
+let ac = null, master = null, muted = false, musicOn = false, mStep = 0, mNext = 0, mTimer = null;
+function audioInit() {
+  if (ac) { ac.resume && ac.resume(); return; }
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  ac = new AC(); master = ac.createGain(); master.gain.value = muted ? 0 : 0.5; master.connect(ac.destination);
+}
+function tone(f, t, d, type, v, f2) {
+  if (!ac) return; const o = ac.createOscillator(), g = ac.createGain(); o.type = type || "square";
+  o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+  g.gain.setValueAtTime(v || .1, t); g.gain.exponentialRampToValueAtTime(.001, t + d);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t + d + .03);
+}
+function hat(t) {
+  if (!ac) return; const n = Math.floor(ac.sampleRate * .03), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+  for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * (1 - k / n);
+  const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; g.gain.value = .05; s.connect(g); g.connect(master); s.start(t);
+}
+const BASS = [55, 0, 55, 0, 65.4, 0, 65.4, 0, 49, 0, 49, 0, 73.4, 0, 82.4, 0], ARP = [220, 261.6, 329.6, 440, 329.6, 261.6, 220, 196];
+function musicTick() {
+  if (!ac || !musicOn || paused) return;
+  while (mNext < ac.currentTime + .25) {
+    const k = mStep % 16; if (BASS[k]) tone(BASS[k], mNext, .22, "square", .05);
+    if (k % 2 === 0) tone(ARP[(mStep >> 1) % 8], mNext, .12, "triangle", .045); else hat(mNext);
+    mNext += .127; mStep++;
+  }
+}
+function startMusic() { if (!ac || musicOn) return; musicOn = true; mNext = ac.currentTime + .05; mTimer = setInterval(musicTick, 50); }
+function stopMusic() { musicOn = false; clearInterval(mTimer); }
+const sfx = {
+  step() { if (ac) tone(720, ac.currentTime, .05, "sine", .08); },
+  good() { if (!ac) return; const t = ac.currentTime; [523, 659, 784, 1047].forEach((f, k) => tone(f, t + k * .08, .12, "square", .08)); },
+  bad() { if (!ac) return; const t = ac.currentTime; tone(200, t, .35, "sawtooth", .12, 55); hat(t); },
+  boost() { if (!ac) return; const t = ac.currentTime; tone(280, t, .3, "sawtooth", .07, 1100); },
+  tick() { if (ac) tone(880, ac.currentTime, .05, "square", .035); },
+  done() { if (!ac) return; const t = ac.currentTime; [523, 659, 784, 659, 784, 1047].forEach((f, k) => tone(f, t + k * .11, .16, "square", .08)); }
+};
+function setMuted(m) { muted = m; if (master) master.gain.value = m ? 0 : .5; document.querySelectorAll(".sndbtn").forEach(b => b.textContent = muted ? "🔇 Sound off" : "🔊 Sound on"); }
+
+/* ---------------- The run (drawn on a canvas in perspective) ---------------- */
+const W = 720, H = 540, HZ = 215, PY = 455, LW = 120, CX = 360, Z0 = 7, ZSTART = 46, ZEND = 0.5;
+const S = z => 1 / (1 + z / Z0), Y = s => HZ + (PY - HZ) * s, X = (l, s) => CX + l * LW * s;
+const LANE_COL = ["#00AEC5", "#D4547E", "#F47B20", "#7DC242"], LANE_DARK = ["#06707F", "#8F2C52", "#9A4208", "#4E7F22"];
+const ZONES = [
+  { sky: ["#070B24", "#1B2352"], road: "#1A1F4A", chars: "01", assets: [0, 3, 0, 0, 3] },
+  { sky: ["#1A0B2E", "#3C1B58"], road: "#251A4D", chars: "0123456789ABCDEF", assets: [1, 0, 1, 3, 1] },
+  { sky: ["#061F22", "#0F4A4F"], road: "#123A40", chars: "{}<>/;=#", assets: [2, 1, 2, 0, 2] }
+];
+let zA = ZONES[0], zB = ZONES[0], zt = 1;   // zones fade from zA to zB as zt goes from 0 to 1
+const hexRGB = c => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+const mix = (a, b, t) => { const x = hexRGB(a), y = hexRGB(b); return "rgb(" + x.map((v, i) => Math.round(v + (y[i] - v) * t)).join(",") + ")"; };
+let Q = [], qi = 0, results = [], q = null, gate = null, lane = 1, px = 1, phase = "idle", paused = false, relaxed = false;
+let boosted = false, score = 0, timeLeft = 90, lastTick = 0, toastT = 0, toast = null, boostBtn = null, qText = null, lvlEl = null;
+let off = 0, vel = 0, tm = 0, last = 0, timer = 0, shake = 0, raf = 0, parts = [], rings = [], cv, ctx, dpr = 1, ov, opts = [], pauseBtn;
+const rch = () => { const ch = (zt < .5 ? zA : zB).chars; return ch[Math.floor(Math.random() * ch.length)]; };
+const rain = Array.from({ length: 34 }, () => ({ x: Math.random() * W, y: Math.random() * HZ, s: 25 + Math.random() * 60, c: rch(), a: .15 + Math.random() * .4 }));
+
+function asset(type, x, base, s, n) {
+  const w = 80 * s;
+  if (type === 0) {
+    const h = 230 * s; ctx.fillStyle = "#232A5C"; ctx.fillRect(x - w / 2, base - h, w, h); ctx.strokeStyle = "#5F7FA8"; ctx.lineWidth = Math.max(1, 2 * s); ctx.strokeRect(x - w / 2, base - h, w, h);
+    for (let r = 0; r < 6; r++) { ctx.fillStyle = LANE_COL[(n + r) % 4]; ctx.fillRect(x - w * .38, base - h + (r * 2 + 1) * h / 13, w * .16, Math.max(1, h / 28)); ctx.fillStyle = "#0B1030"; ctx.fillRect(x - w * .1, base - h + (r * 2 + 1) * h / 13, w * .45, Math.max(1, h / 28)); }
+  } else if (type === 1) {
+    ctx.strokeStyle = "#5F7FA8"; ctx.lineWidth = Math.max(1, 5 * s); ctx.beginPath(); ctx.moveTo(x, base); ctx.lineTo(x, base - 95 * s); ctx.stroke();
+    ctx.fillStyle = "#232A5C"; ctx.fillRect(x - w * .6, base - 135 * s, w * 1.2, 40 * s); ctx.strokeRect(x - w * .6, base - 135 * s, w * 1.2, 40 * s);
+    for (let r = 0; r < 3; r++) { ctx.fillStyle = LANE_COL[(n + r) % 4]; ctx.fillRect(x - w * .45 + r * w * .3, base - 120 * s, w * .14, 8 * s); }
+    ctx.strokeStyle = "#8D92B3"; ctx.beginPath(); ctx.moveTo(x - w * .5, base - 135 * s); ctx.lineTo(x - w * .6, base - 175 * s); ctx.moveTo(x + w * .5, base - 135 * s); ctx.lineTo(x + w * .6, base - 175 * s); ctx.stroke();
+    for (let r = 1; r <= 3; r++) { ctx.strokeStyle = "rgba(0,229,255," + (.8 - r * .18) + ")"; ctx.lineWidth = Math.max(1, 3 * s); ctx.beginPath(); ctx.arc(x, base - 135 * s, (25 + r * 22) * s, -2.25, -.89); ctx.stroke(); }
+  } else if (type === 2) {
+    const z = 110 * s, y0 = base - z - 14 * s; ctx.fillStyle = "#8D92B3";
+    for (let r = 0; r < 6; r++) { ctx.fillRect(x - z / 2 - 14 * s, y0 + 8 * s + r * z / 6.5, 14 * s, Math.max(1, 6 * s)); ctx.fillRect(x + z / 2, y0 + 8 * s + r * z / 6.5, 14 * s, Math.max(1, 6 * s)); }
+    ctx.fillStyle = "#20253F"; ctx.fillRect(x - z / 2, y0, z, z); ctx.strokeStyle = LANE_COL[n % 4]; ctx.lineWidth = Math.max(1, 3 * s); ctx.strokeRect(x - z / 2, y0, z, z);
+    ctx.save(); ctx.fillStyle = LANE_COL[(n + 1) % 4]; ctx.globalAlpha *= .55; ctx.fillRect(x - z * .28, y0 + z * .22, z * .56, z * .56); ctx.restore();
+    ctx.fillStyle = "#E8EAF2"; ctx.beginPath(); ctx.arc(x - z * .38, y0 + z * .13, Math.max(1, 4 * s), 0, 7); ctx.fill();
+  } else {
+    for (let m = 0; m < 2; m++) {
+      const y = base - (m + 1) * 78 * s, mw = w * 1.15; ctx.fillStyle = "#0B1030"; ctx.fillRect(x - mw / 2, y, mw, 62 * s); ctx.strokeStyle = "#00E5FF"; ctx.lineWidth = Math.max(1, 3 * s); ctx.strokeRect(x - mw / 2, y, mw, 62 * s);
+      ctx.fillStyle = "rgba(0,229,255,.28)"; ctx.fillRect(x - mw * .4, y + 8 * s, mw * .8, 7 * s); ctx.fillRect(x - mw * .4, y + 22 * s, mw * .5, 7 * s); ctx.fillStyle = LANE_COL[(n + m) % 4]; ctx.fillRect(x - mw * .4, y + 38 * s, mw * .3, 12 * s);
+    }
+    ctx.fillStyle = "#5F7FA8"; ctx.fillRect(x - 4 * s, base - 14 * s, 8 * s, 14 * s);
+  }
+}
+
+function drawGate(g) {
+  const s = S(g.z); if (s <= 0) return;
+  for (let i = 0; i < 4; i++) {
+    const cx = X(i - 1.5, s), w = LW * .94 * s, h = 150 * s, base = Y(s), isOpen = g.open === i, lift = isOpen ? g.lift : 0, y0 = base - h - lift * h * 1.35;
+    ctx.save(); ctx.globalAlpha = 1 - lift * .85;
+    ctx.fillStyle = LANE_COL[i]; ctx.fillRect(cx - w / 2, y0, w, h);
+    ctx.strokeStyle = LANE_DARK[i]; ctx.lineWidth = Math.max(1, 2 * s);
+    for (let r = 1; r < 4; r++) { ctx.beginPath(); ctx.moveTo(cx - w / 2, y0 + r * h / 4); ctx.lineTo(cx + w / 2, y0 + r * h / 4); ctx.stroke(); }
+    for (let r = 0; r < 4; r++) for (let c = 1; c < 3; c++) { const bx = cx - w / 2 + (c + (r % 2 ? .5 : 0)) * w / 3; if (bx < cx + w / 2) { ctx.beginPath(); ctx.moveTo(bx, y0 + r * h / 4); ctx.lineTo(bx, y0 + (r + 1) * h / 4); ctx.stroke(); } }
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = Math.max(1.5, 4 * s); ctx.strokeRect(cx - w / 2, y0, w, h);
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(cx, y0 + h * .5, 34 * s, 0, 7); ctx.fill();
+    ctx.fillStyle = "#1E2240"; ctx.font = "bold " + Math.max(6, 46 * s) + "px Trebuchet MS,Segoe UI,sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("ABCD"[i], cx, y0 + h * .5 + 2 * s);
+    ctx.restore();
+  }
+}
+
+function drawPlayer() {
+  const x = CX + (px - 1.5) * LW, run = (phase === "run" || phase === "pass") ? Math.sin(tm * 9) : 0, bob = (phase === "run" || phase === "pass") ? Math.abs(Math.sin(tm * 9)) * 5 : 0;
+  ctx.save(); ctx.translate(x, PY + (phase === "crash" ? 8 : 0));
+  if (phase === "crash") ctx.rotate(Math.sin(tm * 25) * .1 * Math.max(0, timer));
+  ctx.fillStyle = "rgba(0,0,0,.4)"; ctx.beginPath(); ctx.ellipse(0, 12, 28, 8, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = "#353853"; ctx.fillRect(-18, -34 + run * 5, 13, 40); ctx.fillRect(5, -34 - run * 5, 13, 40);
+  ctx.fillStyle = "#8D92B3"; ctx.fillRect(-18, 2 + run * 5, 13, 8); ctx.fillRect(5, 2 - run * 5, 13, 8);
+  ctx.translate(0, -bob);
+  ctx.fillStyle = "#00AEC5"; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-22, -82, 44, 52, 8) : ctx.rect(-22, -82, 44, 52); ctx.fill();
+  ctx.strokeStyle = "#E8EAF2"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-12, -70); ctx.lineTo(-12, -50); ctx.lineTo(0, -50); ctx.moveTo(8, -74); ctx.lineTo(8, -56); ctx.lineTo(16, -56); ctx.stroke();
+  ctx.fillStyle = "#1E2240"; ctx.fillRect(-14, -48, 28, 14); ctx.fillStyle = "#F47B20"; ctx.fillRect(-10, -45, 6, 8); ctx.fillStyle = "#7DC242"; ctx.fillRect(2, -45, 8, 8);
+  ctx.fillStyle = "#E8EAF2"; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-17, -118, 34, 34, 8) : ctx.rect(-17, -118, 34, 34); ctx.fill();
+  ctx.fillStyle = "#1E2240"; ctx.fillRect(-12, -108, 24, 10);
+  ctx.strokeStyle = "#E8EAF2"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, -118); ctx.lineTo(0, -132); ctx.stroke();
+  ctx.fillStyle = "#F47B20"; ctx.beginPath(); ctx.arc(0, -134, 5, 0, 7); ctx.fill();
+  ctx.restore();
+}
+
+function draw() {
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.save();
+  if (shake > 0 && !calm) ctx.translate((Math.random() - .5) * shake, (Math.random() - .5) * shake);
+  let g = ctx.createLinearGradient(0, 0, 0, HZ); g.addColorStop(0, mix(zA.sky[0], zB.sky[0], zt)); g.addColorStop(1, mix(zA.sky[1], zB.sky[1], zt)); ctx.fillStyle = g; ctx.fillRect(-10, -10, W + 20, HZ + 10);
+  ctx.font = "bold 14px Consolas,monospace"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  rain.forEach(r => { ctx.fillStyle = "rgba(0,229,255," + r.a + ")"; ctx.fillText(r.c, r.x, r.y); });
+  g = ctx.createRadialGradient(CX, HZ, 5, CX, HZ, 150); g.addColorStop(0, "rgba(0,229,255,.55)"); g.addColorStop(1, "rgba(0,229,255,0)"); ctx.fillStyle = g; ctx.fillRect(CX - 150, HZ - 150, 300, 150);
+  ctx.fillStyle = "#0B1030"; ctx.fillRect(CX - 28, HZ - 32, 56, 32); ctx.strokeStyle = "#00E5FF"; ctx.lineWidth = 2; ctx.strokeRect(CX - 28, HZ - 32, 56, 32);
+  ctx.fillStyle = "#00E5FF"; ctx.font = "bold 13px Consolas,monospace"; ctx.textAlign = "center"; ctx.fillText("CPU", CX, HZ - 12);
+  ctx.fillStyle = "#0E1233"; ctx.fillRect(-10, HZ, W + 20, H - HZ + 10);
+  const sB = (H - HZ) / (PY - HZ);
+  ctx.fillStyle = mix(zA.road, zB.road, zt); ctx.beginPath(); ctx.moveTo(CX, HZ); ctx.lineTo(X(2, sB), H); ctx.lineTo(X(-2, sB), H); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = "#00E5FF"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(CX, HZ); ctx.lineTo(X(2, sB), H); ctx.moveTo(CX, HZ); ctx.lineTo(X(-2, sB), H); ctx.stroke();
+  for (let k = -1; k < 36; k++) {
+    const z1 = Math.max(-1.5, k * 2 - (off % 2)), z2 = k * 2 - (off % 2) + .9; if (z2 < -1.5) continue;
+    const s1 = S(z1), s2 = S(z2);
+    [-1, 0, 1].forEach(b => { ctx.strokeStyle = "rgba(232,234,242,.55)"; ctx.lineWidth = Math.max(1, 4 * s1); ctx.beginPath(); ctx.moveTo(X(b, s1), Y(s1)); ctx.lineTo(X(b, s2), Y(s2)); ctx.stroke(); });
+  }
+  for (let k = 0; k < 20; k++) { const z = k * 3 - (off % 3); if (z < -1.5) continue; const s = S(z); ctx.strokeStyle = "rgba(0,229,255,.14)"; ctx.lineWidth = Math.max(1, 2 * s); ctx.beginPath(); ctx.moveTo(X(-2, s), Y(s)); ctx.lineTo(X(2, s), Y(s)); ctx.stroke(); }
+  const n0 = Math.floor(off / 6);
+  const scenery = (zn, alpha) => {
+    if (alpha <= 0) return; ctx.save(); ctx.globalAlpha = alpha;
+    for (let k = 12; k >= 0; k--) {
+      const z = k * 6 - (off % 6); if (z < -1.2) continue; const s = S(z), base = Y(s), n = n0 + k;
+      [-1, 1].forEach(sd => asset(zn.assets[(n * 3 + (sd > 0 ? 2 : 0)) % zn.assets.length], X(sd * 2.75, s), base, s, n + (sd > 0 ? 1 : 0)));
+    }
+    ctx.restore();
+  };
+  if (zt < 1) scenery(zA, 1 - zt); scenery(zB, zt);
+  if (gate) drawGate(gate);
+  if (boosted && phase === "run") {
+    ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.lineWidth = 3;
+    for (let k = 0; k < 18; k++) { const x = 60 + (k * 97) % (W - 120), y = calm ? HZ + (k * 53) % (H - HZ) : HZ + (tm * 1400 + k * 71) % (H - HZ); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 40); ctx.stroke(); }
+    ctx.fillStyle = "#FFE600"; ctx.font = "bold 26px Trebuchet MS,Segoe UI,sans-serif"; ctx.textAlign = "center"; ctx.fillText("⚡ BOOST!", CX, HZ + 40);
+  }
+  drawPlayer();
+  rings.forEach(r => { ctx.globalAlpha = Math.max(0, r.life); ctx.lineWidth = 6; ctx.strokeStyle = r.good ? "#7DFFB0" : "#FF7A8A"; ctx.setLineDash(r.good ? [] : [12, 9]); ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, 7); ctx.stroke(); });
+  ctx.setLineDash([]);
+  parts.forEach(p => { ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.col; ctx.font = "bold " + p.sz + "px Consolas,monospace"; ctx.textAlign = "center"; ctx.fillText(p.ch, p.x, p.y); });
+  ctx.globalAlpha = 1; ctx.restore();
+}
+
+// A ring and a burst of symbols around the runner: smooth rings, sparkles and ✔ for right, dashed rings and ✕ for wrong.
+function fx(good) {
+  const x = CX + (px - 1.5) * LW, y = PY - 70;
+  rings.push({ x, y, r: 26, life: 1, good }, { x, y, r: 8, life: 1.4, good });
+  if (calm) return;
+  const chars = good ? ["✦", "0", "1", "✔"] : ["✕", "!", "✕", "0"], cols = good ? ["#7DFFB0", "#00E5FF", "#FFE600"] : ["#FF7A8A", "#F47B20", "#FFB3BC"];
+  for (let k = 0; k < 44; k++) { const a = k / 44 * Math.PI * 2 + Math.random() * .3, sp = 110 + Math.random() * 200; parts.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: good ? -70 : 280, life: 1, ch: chars[k % chars.length], col: cols[k % cols.length], sz: 16 + Math.random() * 14 }); }
+}
+
+function update(dt) {
+  if (zt < 1) zt = Math.min(1, zt + dt / 2.5);
+  tm += dt; if (shake > 0) shake = Math.max(0, shake - dt * 30);
+  if (toastT > 0) { toastT -= dt; if (toastT <= 0 && toast) toast.style.display = "none"; }
+  if (!calm) rain.forEach(r => { r.y += r.s * dt; if (r.y > HZ) { r.y = 0; r.x = Math.random() * W; r.c = rch(); } });
+  px += (lane - px) * Math.min(1, dt * 12);
+  parts.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g === undefined ? 600 : p.g) * dt; p.vx *= .985; p.life -= dt * 1.1; }); parts = parts.filter(p => p.life > 0);
+  rings.forEach(r => { r.life -= dt * 1.4; if (!calm) r.r += 380 * dt; }); rings = rings.filter(r => r.life > 0);
+  const base = q ? (ZSTART - ZEND) / q.seconds : 3, spd = base * (boosted ? GAME.boostFactor : 1);
+  let target = 0;
+  if (phase === "run" || phase === "pass" || phase === "crash") {
+    timeLeft -= dt; setClock();
+    const c = Math.ceil(timeLeft); if (timeLeft > 0 && timeLeft <= 10 && c !== lastTick) { lastTick = c; sfx.tick(); }
+  }
+  if (phase === "run") { gate.z -= spd * dt; target = Math.min(spd, base * 3); if (timeLeft <= 0) return end(); if (gate.z <= ZEND) resolve(); }
+  else if (phase === "pass") { target = base; gate.z -= base * dt * 1.4; gate.lift = Math.min(1, gate.lift + dt * 2.2); timer -= dt; if (timer <= 0) after(); }
+  else if (phase === "crash") { timer -= dt; if (timer <= 0) after(); }
+  vel += (target - vel) * Math.min(1, dt * 6); off += vel * dt;
+}
+
+function loop(ts) {
+  const dt = Math.min(.05, (ts - last) / 1000 || 0); last = ts;
+  if (!paused && phase !== "end") update(dt);
+  draw(); raf = requestAnimationFrame(loop);
+}
+
+/* ---------------- Game flow ---------------- */
+const fmt = t => { t = Math.max(0, Math.ceil(t)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); };
+const words = t => { const m = Math.floor(t / 60), s = t % 60; return (m ? m + " minute" + (m > 1 ? "s" : "") : "") + (m && s ? " " : "") + (s ? s + " seconds" : "") + " (" + t + " seconds)"; };
+function setClock() {
+  const c = $("clock"); if (c) c.textContent = "⏱ " + fmt(timeLeft);
+  $("prog").style.width = (Math.max(0, timeLeft) / GAME.timeLimit * 100) + "%";
+}
+function setScore() { const c = $("scoreChip"); if (c) c.textContent = "Score: " + score; }
+function setLane(k) { if (k === lane || k < 0 || k > 3) return; lane = k; sfx.step(); markHere(); }
+function markHere() { opts.forEach((b, k) => b.classList.toggle("here", k === lane && phase === "run")); }
+function showToast(txt, ok) { toast.textContent = txt; toast.className = "toast " + (ok ? "ok" : "no"); toast.style.display = "block"; toastT = 1.8; }
+
+function buildQ(x, ti) {
+  const o = shuffle(x.o.map((txt, k) => ({ txt, ok: k === x.a }))), t = GAME.tiers[ti];
+  return { q: x.q, opts: o.map(a => a.txt), a: o.findIndex(a => a.ok), level: ti + 1, tierName: t.name, seconds: t.seconds, points: t.points, src: x };
+}
+function extend() {
+  const T = GAME.tiers.length, used = new Set(Q.map(z => z.src)); let pool = [];
+  const gather = () => { for (let ti = Math.max(0, T - 2); ti < T; ti++) GAME.tiers[ti].questions.forEach(x => { if (!used.has(x)) pool.push([x, ti]); }); };
+  gather(); if (!pool.length) { used.clear(); gather(); }
+  shuffle(pool).slice(0, 5).forEach(([x, ti]) => Q.push(buildQ(x, ti)));
+}
+
+function start() {
+  const h = /^#([0-9]{1,9})$/.exec(location.hash);
+  seed = firstLaunch && h ? +h[1] : newSeed(); firstLaunch = false; rnd = mulberry32(seed);
+  Q = []; GAME.tiers.forEach((t, ti) => shuffle(t.questions).slice(0, t.pick).forEach(x => Q.push(buildQ(x, ti))));
+  cancelAnimationFrame(raf); stopMusic(); phase = "idle"; cv = null; qi = 0; results = []; score = 0; timeLeft = GAME.timeLimit; $("prog").style.width = "100%";
+  const c = el("div", "card");
+  c.append(el("p", "big", "🏃"), el("h2", "", "Race to the CPU!"),
+    el("p", "hint", "You are a data packet racing through the computer. You have " + words(GAME.timeLimit) + " to answer as many questions as you can."));
+  const ul = el("ul", "ul2");
+  ["The timer is shown at the top of the game window and counts down from " + fmt(GAME.timeLimit) + ".",
+   "Firewalls A, B, C and D block the road. Steer into the lane with the right answer to open the firewall.",
+   "Move with the ← → arrow keys (or A and D), press 1 to 4, swipe, or tap an answer at the top.",
+   "Every right answer scores points, and harder questions score more.",
+   "Feeling sure? Press Space, ↑ or the ⚡ Boost button to speed up fast and earn bonus points.",
+   "A wrong lane scores nothing, but there is no penalty. Press P to pause."].forEach(t => ul.append(el("li", "", t)));
+  const ctl = el("div", "ctl"), snd = el("button", "go alt sndbtn", ""), rel = el("button", "go alt", "Relaxed pace: off");
+  snd.onclick = () => { audioInit(); setMuted(!muted); sfx.step(); };
+  rel.onclick = () => { relaxed = !relaxed; rel.textContent = "Relaxed pace: " + (relaxed ? "on (more time per question)" : "off"); };
+  const go = el("button", "go", "Start the run"); go.onclick = begin; ctl.append(snd, rel, go);
+  c.append(ul); if (GAME.help) c.append(el("p", "hint", GAME.help)); c.append(ctl); app.replaceChildren(c); setMuted(muted);
+}
+
+function begin() {
+  audioInit(); startMusic();
+  const card = el("div", "card"), stage = el("div", "stage");
+  cv = document.createElement("canvas"); dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = W * dpr; cv.height = H * dpr; cv.setAttribute("role", "img"); cv.setAttribute("aria-label", "A runner racing along a circuit board towards four firewall gates labelled A, B, C and D. Use the answer buttons at the top of the game window to choose.");
+  ctx = cv.getContext("2d"); ov = el("div", "ov"); toast = el("div", "toast");
+  const hud = el("div", "hud"), row = el("div", "hrow"), sc = el("span", "chip", ""), ck = el("span", "chip", ""); sc.id = "scoreChip"; ck.id = "clock";
+  lvlEl = el("div", "hlvl", ""); row.append(sc, lvlEl, ck); qText = el("div", "qtext", "");
+  const chips = el("div", "achips"); opts = [0, 1, 2, 3].map(k => { const b = el("button", "ach"); b.style.setProperty("--c", LANE_COL[k]); b.onclick = () => { if (phase === "run" || phase === "pass") setLane(k); }; chips.append(b); return b; });
+  hud.append(row, qText, chips); stage.append(cv, hud, ov, toast);
+  const ctl = el("div", "ctl"); boostBtn = el("button", "go", "⚡ Boost"); boostBtn.onclick = doBoost;
+  pauseBtn = el("button", "go alt", "⏸ Pause"); pauseBtn.onclick = () => togglePause();
+  const snd = el("button", "go alt sndbtn", ""); snd.onclick = () => { setMuted(!muted); sfx.step(); };
+  ctl.append(boostBtn, pauseBtn, snd);
+  card.append(stage, ctl); app.replaceChildren(card); setMuted(muted);
+  card.addEventListener("click", e => { const b = e.target.closest("button"); if (b) b.blur(); });
+  const fit = () => stage.style.setProperty("--u", (stage.clientWidth / W) + "px"); fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(stage); else addEventListener("resize", fit);
+  let sx = null;
+  cv.onpointerdown = e => { sx = e.clientX; }; cv.onpointerup = e => { if (sx !== null && (phase === "run" || phase === "pass")) { const d = e.clientX - sx; if (Math.abs(d) > 30) setLane(Math.max(0, Math.min(3, lane + (d > 0 ? 1 : -1)))); } sx = null; };
+  zA = zB = ZONES[0]; zt = 1; lane = 1; px = 1; off = 0; vel = 0; parts = []; rings = []; paused = false; qi = 0; results = []; score = 0; timeLeft = GAME.timeLimit; lastTick = 0; toastT = 0; boosted = false;
+  setClock(); setScore(); cancelAnimationFrame(raf); last = performance.now(); raf = requestAnimationFrame(loop);
+  nextQ();
+}
+
+function nextQ() {
+  if (qi >= Q.length) extend();
+  q = Q[qi]; if (relaxed) q = { ...q, seconds: q.seconds * 1.6 };
+  const nz = ZONES[Math.min(q.level - 1, ZONES.length - 1)]; if (nz !== zB) { zA = zB; zB = nz; zt = 0; }
+  boosted = false; boostBtn.textContent = "⚡ Boost"; boostBtn.classList.remove("on");
+  lvlEl.textContent = "Level " + q.level + " · " + q.tierName + " · " + q.points + " points"; qText.textContent = q.q;
+  opts.forEach((b, k) => { b.className = "ach"; b.replaceChildren(el("i", "", "ABCD"[k]), el("span", "", q.opts[k])); b.setAttribute("aria-label", "Lane " + "ABCD"[k] + ": " + q.opts[k]); });
+  gate = { z: ZSTART, open: null, lift: 0 }; phase = "run"; ov.style.display = "none"; markHere();
+}
+
+function doBoost() {
+  if (phase !== "run" || boosted || paused) return;
+  boosted = true; boostBtn.textContent = "⚡ Boosting!"; boostBtn.classList.add("on"); sfx.boost();
+}
+
+function resolve() {
+  const ok = lane === q.a; gate.z = ZEND; markHere();
+  const bonus = ok && boosted ? Math.round(q.points * GAME.boostBonus) : 0, pts = ok ? q.points + bonus : 0;
+  score += pts; results.push({ ok, boosted, pts }); setScore();
+  opts[q.a].classList.add("right"); if (!ok) opts[lane].classList.add("miss");
+  showToast(ok ? "✔ +" + pts + (bonus ? " (boost bonus +" + bonus + ")" : "") : "✘ The answer was " + "ABCD"[q.a] + ": " + q.opts[q.a], ok);
+  fx(ok);
+  if (ok) { gate.open = lane; phase = "pass"; timer = 1; sfx.good(); } else { phase = "crash"; timer = 1.3; shake = 16; sfx.bad(); }
+}
+
+function after() { qi++; if (timeLeft <= 0) return end(); nextQ(); }
+
+function togglePause(force) {
+  if (phase === "idle" || phase === "end") return;
+  paused = force !== undefined ? force : !paused; pauseBtn.textContent = paused ? "▶ Resume" : "⏸ Pause";
+  if (paused) { const c = el("div", "ovc"); c.append(el("h2", "", "Paused"), el("p", "", "The timer is stopped. The run carries on when you press Resume.")); const b = el("button", "go", "Resume"); b.onclick = () => togglePause(false); c.append(b); ov.replaceChildren(c); ov.style.display = "flex"; }
+  else ov.style.display = "none";
+}
+
+function end() {
+  phase = "end"; cancelAnimationFrame(raf); stopMusic(); sfx.done(); timeLeft = Math.max(0, timeLeft);
+  const got = results.filter(r => r.ok).length, c = el("div", "card");
+  c.append(el("p", "big", "🏁"), el("h2", "", "Time’s up!"), el("div", "bigscore", "Score: " + score),
+    el("p", "hint", "You got " + got + " out of " + results.length + " right."),
+    el("p", "shot", "📸 Take a screenshot and add it to your OneNote."), el("p", "sub", GAME.helpEnd || GAME.help || ""),
+    el("p", "sub", [GAME.module, GAME.lesson, GAME.title, "Set " + seed].filter(Boolean).join(" · ")));
+  const b = el("button", "go", "Play again"); b.onclick = start; c.append(b);
+  app.replaceChildren(c); $("prog").style.width = "0%";
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter") { e.preventDefault(); return; }
+  if (!cv || phase === "idle" || phase === "end") return;
+  const k = e.key.toLowerCase();
+  if (k === "p" || k === "escape") { e.preventDefault(); togglePause(); }
+  else if (!paused && (phase === "run" || phase === "pass")) {
+    if (k === "arrowleft" || k === "a") { e.preventDefault(); setLane(lane - 1); }
+    else if (k === "arrowright" || k === "d") { e.preventDefault(); setLane(lane + 1); }
+    else if (k >= "1" && k <= "4") setLane(+k - 1);
+    else if (k === " " || k === "arrowup" || k === "w") { e.preventDefault(); doBoost(); }
+  }
+}, true);
+document.addEventListener("visibilitychange", () => { if (document.hidden && (phase === "run" || phase === "pass")) togglePause(true); });
+
+document.querySelector(".stats").style.display = "none";
+$("gTitle").textContent = GAME.title;
+$("gSub").textContent = [GAME.module, GAME.lesson, GAME.subtitle].filter(Boolean).join(" · ");
+if (GAME.logo) { $("logo").src = GAME.logo; $("logo").style.display = "block"; }
+document.title = GAME.title;
+start();
+</script>
+</body>
+</html>
