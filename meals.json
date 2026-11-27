@@ -1,0 +1,1196 @@
+{
+ "ingredients": {
+  "tofu": {
+   "n": "Firm tofu (calcium-set)",
+   "u": "g",
+   "p": 16.0,
+   "c": 1.8,
+   "f": 8.0,
+   "fi": 0.8,
+   "ca": 350
+  },
+  "tempeh": {
+   "n": "Tempeh",
+   "u": "g",
+   "p": 20.3,
+   "c": 7.6,
+   "f": 10.8,
+   "fi": 5.0,
+   "ca": 100
+  },
+  "seitan": {
+   "n": "Seitan (ready-made)",
+   "u": "g",
+   "p": 17.9,
+   "c": 10.7,
+   "f": 0.8,
+   "fi": 1.2,
+   "ca": 20
+  },
+  "tvp": {
+   "n": "Soya mince (dry)",
+   "u": "g",
+   "p": 54.2,
+   "c": 19.9,
+   "f": 0.6,
+   "fi": 3.5,
+   "ca": 240
+  },
+  "bread": {
+   "n": "Wholemeal bread",
+   "u": "g",
+   "p": 9.4,
+   "c": 42.0,
+   "f": 2.5,
+   "fi": 7.0,
+   "ca": 106
+  },
+  "oats": {
+   "n": "Rolled oats",
+   "u": "g",
+   "p": 16.9,
+   "c": 66.3,
+   "f": 6.9,
+   "fi": 10.6,
+   "ca": 54
+  },
+  "soyamilk": {
+   "n": "Soya milk, fortified",
+   "u": "ml",
+   "p": 3.3,
+   "c": 0.1,
+   "f": 1.8,
+   "fi": 0.6,
+   "ca": 120
+  },
+  "pb": {
+   "n": "Peanut butter",
+   "u": "g",
+   "p": 25.0,
+   "c": 20.0,
+   "f": 50.0,
+   "fi": 6.0,
+   "ca": 40
+  },
+  "hemp": {
+   "n": "Hemp seeds",
+   "u": "g",
+   "p": 31.6,
+   "c": 8.7,
+   "f": 48.8,
+   "fi": 4.0,
+   "ca": 70
+  },
+  "chickflour": {
+   "n": "Chickpea flour",
+   "u": "g",
+   "p": 22.0,
+   "c": 58.0,
+   "f": 6.7,
+   "fi": 10.8,
+   "ca": 45
+  },
+  "soyayog": {
+   "n": "Soya yoghurt, plain",
+   "u": "g",
+   "p": 4.0,
+   "c": 1.0,
+   "f": 2.3,
+   "fi": 0.6,
+   "ca": 120
+  },
+  "granola": {
+   "n": "Granola",
+   "u": "g",
+   "p": 9.0,
+   "c": 62.0,
+   "f": 16.0,
+   "fi": 7.0,
+   "ca": 60
+  },
+  "pumpkinseed": {
+   "n": "Pumpkin seeds",
+   "u": "g",
+   "p": 30.2,
+   "c": 10.7,
+   "f": 49.0,
+   "fi": 6.0,
+   "ca": 46
+  },
+  "natyeast": {
+   "n": "Nutritional yeast",
+   "u": "g",
+   "p": 50.0,
+   "c": 36.0,
+   "f": 5.0,
+   "fi": 20.0,
+   "ca": 20
+  },
+  "chickpeas": {
+   "n": "Chickpeas, cooked",
+   "u": "g",
+   "p": 8.9,
+   "c": 27.4,
+   "f": 2.6,
+   "fi": 7.6,
+   "ca": 48
+  },
+  "lentils": {
+   "n": "Lentils, cooked",
+   "u": "g",
+   "p": 9.0,
+   "c": 20.1,
+   "f": 0.4,
+   "fi": 7.9,
+   "ca": 19
+  },
+  "blackbeans": {
+   "n": "Black beans, cooked",
+   "u": "g",
+   "p": 8.9,
+   "c": 23.7,
+   "f": 0.5,
+   "fi": 8.7,
+   "ca": 27
+  },
+  "splitpeas": {
+   "n": "Split peas, cooked",
+   "u": "g",
+   "p": 8.3,
+   "c": 21.1,
+   "f": 0.4,
+   "fi": 8.3,
+   "ca": 14
+  },
+  "edamame": {
+   "n": "Edamame",
+   "u": "g",
+   "p": 11.9,
+   "c": 8.9,
+   "f": 5.2,
+   "fi": 5.2,
+   "ca": 63
+  },
+  "quinoa": {
+   "n": "Quinoa, cooked",
+   "u": "g",
+   "p": 4.4,
+   "c": 21.3,
+   "f": 1.9,
+   "fi": 2.8,
+   "ca": 17
+  },
+  "brownrice": {
+   "n": "Brown rice, cooked",
+   "u": "g",
+   "p": 2.7,
+   "c": 25.6,
+   "f": 1.0,
+   "fi": 1.6,
+   "ca": 10
+  },
+  "wholespag": {
+   "n": "Wholewheat pasta, cooked",
+   "u": "g",
+   "p": 5.3,
+   "c": 26.5,
+   "f": 0.5,
+   "fi": 4.5,
+   "ca": 15
+  },
+  "hummus": {
+   "n": "Hummus",
+   "u": "g",
+   "p": 7.9,
+   "c": 14.3,
+   "f": 9.6,
+   "fi": 6.0,
+   "ca": 42
+  },
+  "wrap": {
+   "n": "Wholemeal wrap",
+   "u": "g",
+   "p": 9.0,
+   "c": 46.0,
+   "f": 6.0,
+   "fi": 5.0,
+   "ca": 100
+  },
+  "falafel": {
+   "n": "Falafel",
+   "u": "g",
+   "p": 13.3,
+   "c": 31.8,
+   "f": 17.8,
+   "fi": 4.9,
+   "ca": 54
+  },
+  "tomatoes": {
+   "n": "Tinned tomatoes",
+   "u": "g",
+   "p": 0.9,
+   "c": 3.5,
+   "f": 0.1,
+   "fi": 1.0,
+   "ca": 15
+  },
+  "veg": {
+   "n": "Mixed veg",
+   "u": "g",
+   "p": 1.2,
+   "c": 7.0,
+   "f": 0.2,
+   "fi": 2.5,
+   "ca": 25
+  },
+  "spinach": {
+   "n": "Spinach",
+   "u": "g",
+   "p": 2.9,
+   "c": 3.6,
+   "f": 0.4,
+   "fi": 2.2,
+   "ca": 99
+  },
+  "salad": {
+   "n": "Salad leaves",
+   "u": "g",
+   "p": 1.0,
+   "c": 3.0,
+   "f": 0.2,
+   "fi": 1.0,
+   "ca": 30
+  },
+  "oil": {
+   "n": "Cooking oil",
+   "u": "g",
+   "p": 0.0,
+   "c": 0.0,
+   "f": 100.0,
+   "fi": 0.0,
+   "ca": 0
+  },
+  "apple": {
+   "n": "Apple",
+   "u": "g",
+   "p": 0.3,
+   "c": 13.8,
+   "f": 0.2,
+   "fi": 2.4,
+   "ca": 6
+  },
+  "banana": {
+   "n": "Banana",
+   "u": "g",
+   "p": 1.1,
+   "c": 22.8,
+   "f": 0.3,
+   "fi": 2.6,
+   "ca": 5
+  },
+  "berries": {
+   "n": "Berries",
+   "u": "g",
+   "p": 0.7,
+   "c": 12.0,
+   "f": 0.3,
+   "fi": 2.0,
+   "ca": 15
+  },
+  "nuts": {
+   "n": "Mixed nuts",
+   "u": "g",
+   "p": 20.0,
+   "c": 21.0,
+   "f": 54.0,
+   "fi": 7.0,
+   "ca": 90
+  },
+  "coconutmilk": {
+   "n": "Coconut milk, tinned",
+   "u": "g",
+   "p": 2.0,
+   "c": 3.0,
+   "f": 21.0,
+   "fi": 0.0,
+   "ca": 15
+  },
+  "potato": {
+   "n": "Potato, boiled",
+   "u": "g",
+   "p": 2.0,
+   "c": 17.0,
+   "f": 0.1,
+   "fi": 1.8,
+   "ca": 8
+  },
+  "veganmayo": {
+   "n": "Vegan mayo",
+   "u": "g",
+   "p": 0.3,
+   "c": 2.0,
+   "f": 70.0,
+   "fi": 0.0,
+   "ca": 5
+  },
+  "ricecake": {
+   "n": "Rice cakes",
+   "u": "g",
+   "p": 8.0,
+   "c": 82.0,
+   "f": 2.8,
+   "fi": 4.0,
+   "ca": 10
+  }
+ },
+ "meals": [
+  {
+   "id": "b1",
+   "kind": "breakfast",
+   "title": "Tofu scramble on toast",
+   "hero": "firm tofu",
+   "serving": "150 g tofu, 2 slices wholemeal toast, spinach",
+   "items": [
+    [
+     "tofu",
+     150
+    ],
+    [
+     "natyeast",
+     8
+    ],
+    [
+     "bread",
+     76
+    ],
+    [
+     "spinach",
+     40
+    ],
+    [
+     "oil",
+     5
+    ]
+   ]
+  },
+  {
+   "id": "b2",
+   "kind": "breakfast",
+   "title": "Peanut butter overnight oats",
+   "hero": "soya milk, oats, peanut butter",
+   "serving": "50 g oats, 200 ml soya milk, 20 g peanut butter",
+   "items": [
+    [
+     "oats",
+     50
+    ],
+    [
+     "soyamilk",
+     200
+    ],
+    [
+     "pb",
+     20
+    ],
+    [
+     "banana",
+     80
+    ]
+   ]
+  },
+  {
+   "id": "b3",
+   "kind": "breakfast",
+   "title": "Chickpea flour omelette",
+   "hero": "chickpea flour",
+   "serving": "60 g chickpea flour, peppers, spinach",
+   "items": [
+    [
+     "chickflour",
+     60
+    ],
+    [
+     "veg",
+     80
+    ],
+    [
+     "spinach",
+     30
+    ],
+    [
+     "oil",
+     6
+    ],
+    [
+     "natyeast",
+     5
+    ]
+   ]
+  },
+  {
+   "id": "b4",
+   "kind": "breakfast",
+   "title": "Hemp seed porridge",
+   "hero": "hemp seeds, soya milk, oats",
+   "serving": "50 g oats, 250 ml soya milk, 20 g hemp seeds",
+   "items": [
+    [
+     "oats",
+     50
+    ],
+    [
+     "soyamilk",
+     250
+    ],
+    [
+     "hemp",
+     20
+    ],
+    [
+     "berries",
+     60
+    ]
+   ]
+  },
+  {
+   "id": "b5",
+   "kind": "breakfast",
+   "title": "Soya yoghurt crunch bowl",
+   "hero": "soya yoghurt, seeds",
+   "serving": "250 g soya yoghurt, granola, pumpkin seeds",
+   "items": [
+    [
+     "soyayog",
+     250
+    ],
+    [
+     "granola",
+     30
+    ],
+    [
+     "pumpkinseed",
+     15
+    ],
+    [
+     "berries",
+     80
+    ]
+   ]
+  },
+  {
+   "id": "b6",
+   "kind": "breakfast",
+   "title": "Peanut butter banana toast",
+   "hero": "peanut butter, hemp seeds",
+   "serving": "2 slices wholemeal toast, peanut butter, banana",
+   "items": [
+    [
+     "bread",
+     76
+    ],
+    [
+     "pb",
+     20
+    ],
+    [
+     "banana",
+     80
+    ],
+    [
+     "hemp",
+     10
+    ]
+   ]
+  },
+  {
+   "id": "b7",
+   "kind": "breakfast",
+   "title": "Berry seed overnight oats",
+   "hero": "soya milk, oats, pumpkin seeds",
+   "serving": "50 g oats, 200 ml soya milk, seeds, berries",
+   "items": [
+    [
+     "oats",
+     50
+    ],
+    [
+     "soyamilk",
+     200
+    ],
+    [
+     "pumpkinseed",
+     15
+    ],
+    [
+     "berries",
+     80
+    ]
+   ]
+  },
+  {
+   "id": "l1",
+   "kind": "lunch",
+   "title": "Chickpea “tuna” sandwich",
+   "hero": "chickpeas",
+   "serving": "130 g mashed chickpeas, 2 slices wholemeal",
+   "items": [
+    [
+     "chickpeas",
+     130
+    ],
+    [
+     "veganmayo",
+     15
+    ],
+    [
+     "bread",
+     76
+    ],
+    [
+     "salad",
+     40
+    ]
+   ]
+  },
+  {
+   "id": "l2",
+   "kind": "lunch",
+   "title": "Red lentil soup with bread",
+   "hero": "red lentils",
+   "serving": "200 g cooked lentils, veg, tomatoes, 1 slice",
+   "items": [
+    [
+     "lentils",
+     200
+    ],
+    [
+     "veg",
+     150
+    ],
+    [
+     "tomatoes",
+     100
+    ],
+    [
+     "oil",
+     5
+    ],
+    [
+     "bread",
+     40
+    ]
+   ]
+  },
+  {
+   "id": "l3",
+   "kind": "lunch",
+   "title": "Peanut tofu noodles",
+   "hero": "tofu, peanut butter",
+   "serving": "130 g tofu, wholewheat noodles, veg",
+   "items": [
+    [
+     "tofu",
+     130
+    ],
+    [
+     "wholespag",
+     180
+    ],
+    [
+     "veg",
+     120
+    ],
+    [
+     "pb",
+     20
+    ],
+    [
+     "oil",
+     5
+    ]
+   ]
+  },
+  {
+   "id": "l4",
+   "kind": "lunch",
+   "title": "Black bean burrito bowl",
+   "hero": "black beans, quinoa",
+   "serving": "130 g black beans, 120 g quinoa",
+   "items": [
+    [
+     "blackbeans",
+     130
+    ],
+    [
+     "quinoa",
+     120
+    ],
+    [
+     "veg",
+     80
+    ],
+    [
+     "salad",
+     30
+    ],
+    [
+     "oil",
+     5
+    ]
+   ]
+  },
+  {
+   "id": "l5",
+   "kind": "lunch",
+   "title": "Falafel and hummus wrap",
+   "hero": "chickpeas",
+   "serving": "90 g falafel, 40 g hummus, wholemeal wrap",
+   "items": [
+    [
+     "falafel",
+     90
+    ],
+    [
+     "hummus",
+     40
+    ],
+    [
+     "wrap",
+     60
+    ],
+    [
+     "salad",
+     50
+    ]
+   ]
+  },
+  {
+   "id": "l6",
+   "kind": "lunch",
+   "title": "Edamame rice bowl",
+   "hero": "edamame",
+   "serving": "130 g edamame, 150 g brown rice, veg",
+   "items": [
+    [
+     "edamame",
+     130
+    ],
+    [
+     "brownrice",
+     150
+    ],
+    [
+     "veg",
+     80
+    ],
+    [
+     "oil",
+     5
+    ]
+   ]
+  },
+  {
+   "id": "l7",
+   "kind": "lunch",
+   "title": "Tofu hummus salad wrap",
+   "hero": "tofu, chickpeas",
+   "serving": "100 g tofu, 40 g hummus, wholemeal wrap, salad",
+   "items": [
+    [
+     "tofu",
+     100
+    ],
+    [
+     "hummus",
+     40
+    ],
+    [
+     "wrap",
+     60
+    ],
+    [
+     "salad",
+     60
+    ],
+    [
+     "veg",
+     40
+    ]
+   ]
+  },
+  {
+   "id": "l8",
+   "kind": "lunch",
+   "title": "Lentil quinoa salad",
+   "hero": "lentils, quinoa",
+   "serving": "120 g lentils, 100 g quinoa, veg, pumpkin seeds",
+   "items": [
+    [
+     "lentils",
+     120
+    ],
+    [
+     "quinoa",
+     100
+    ],
+    [
+     "veg",
+     80
+    ],
+    [
+     "salad",
+     40
+    ],
+    [
+     "oil",
+     8
+    ],
+    [
+     "pumpkinseed",
+     10
+    ]
+   ]
+  },
+  {
+   "id": "d1",
+   "kind": "dinner",
+   "title": "Lentil bolognese",
+   "hero": "brown lentils",
+   "serving": "150 g lentils, wholewheat spaghetti",
+   "items": [
+    [
+     "lentils",
+     150
+    ],
+    [
+     "tomatoes",
+     200
+    ],
+    [
+     "veg",
+     120
+    ],
+    [
+     "oil",
+     8
+    ],
+    [
+     "wholespag",
+     180
+    ],
+    [
+     "natyeast",
+     8
+    ]
+   ]
+  },
+  {
+   "id": "d2",
+   "kind": "dinner",
+   "title": "Chickpea and spinach curry",
+   "hero": "chickpeas",
+   "serving": "180 g chickpeas, spinach, brown rice",
+   "items": [
+    [
+     "chickpeas",
+     180
+    ],
+    [
+     "spinach",
+     80
+    ],
+    [
+     "tomatoes",
+     150
+    ],
+    [
+     "coconutmilk",
+     50
+    ],
+    [
+     "veg",
+     60
+    ],
+    [
+     "oil",
+     5
+    ],
+    [
+     "brownrice",
+     150
+    ]
+   ]
+  },
+  {
+   "id": "d3",
+   "kind": "dinner",
+   "title": "Crispy tofu stir-fry",
+   "hero": "firm tofu",
+   "serving": "180 g tofu, veg, brown rice",
+   "items": [
+    [
+     "tofu",
+     180
+    ],
+    [
+     "veg",
+     200
+    ],
+    [
+     "brownrice",
+     150
+    ],
+    [
+     "oil",
+     8
+    ]
+   ]
+  },
+  {
+   "id": "d4",
+   "kind": "dinner",
+   "title": "Tempeh tacos",
+   "hero": "tempeh",
+   "serving": "120 g tempeh, wholemeal wraps, salsa veg",
+   "items": [
+    [
+     "tempeh",
+     120
+    ],
+    [
+     "wrap",
+     70
+    ],
+    [
+     "veg",
+     80
+    ],
+    [
+     "salad",
+     40
+    ],
+    [
+     "oil",
+     6
+    ]
+   ]
+  },
+  {
+   "id": "d5",
+   "kind": "dinner",
+   "title": "Black bean chilli with rice",
+   "hero": "black beans",
+   "serving": "200 g black beans, brown rice",
+   "items": [
+    [
+     "blackbeans",
+     200
+    ],
+    [
+     "tomatoes",
+     200
+    ],
+    [
+     "veg",
+     120
+    ],
+    [
+     "oil",
+     6
+    ],
+    [
+     "brownrice",
+     150
+    ]
+   ]
+  },
+  {
+   "id": "d6",
+   "kind": "dinner",
+   "title": "Seitan fajitas",
+   "hero": "seitan",
+   "serving": "150 g seitan, peppers, two wraps",
+   "items": [
+    [
+     "seitan",
+     150
+    ],
+    [
+     "veg",
+     180
+    ],
+    [
+     "wrap",
+     90
+    ],
+    [
+     "oil",
+     8
+    ],
+    [
+     "salad",
+     30
+    ]
+   ]
+  },
+  {
+   "id": "d7",
+   "kind": "dinner",
+   "title": "Dal with brown rice",
+   "hero": "yellow split peas",
+   "serving": "200 g cooked split peas, brown rice",
+   "items": [
+    [
+     "splitpeas",
+     200
+    ],
+    [
+     "tomatoes",
+     80
+    ],
+    [
+     "veg",
+     60
+    ],
+    [
+     "oil",
+     8
+    ],
+    [
+     "brownrice",
+     150
+    ],
+    [
+     "spinach",
+     50
+    ]
+   ]
+  },
+  {
+   "id": "d8",
+   "kind": "dinner",
+   "title": "Soya mince cottage pie",
+   "hero": "soya mince",
+   "serving": "40 g dry soya mince, potato topping",
+   "items": [
+    [
+     "tvp",
+     40
+    ],
+    [
+     "veg",
+     120
+    ],
+    [
+     "tomatoes",
+     100
+    ],
+    [
+     "potato",
+     250
+    ],
+    [
+     "soyamilk",
+     40
+    ],
+    [
+     "oil",
+     6
+    ],
+    [
+     "natyeast",
+     5
+    ]
+   ]
+  },
+  {
+   "id": "d9",
+   "kind": "dinner",
+   "title": "Tofu and veg coconut curry",
+   "hero": "firm tofu",
+   "serving": "150 g tofu, veg, coconut milk, brown rice",
+   "items": [
+    [
+     "tofu",
+     150
+    ],
+    [
+     "tomatoes",
+     150
+    ],
+    [
+     "coconutmilk",
+     50
+    ],
+    [
+     "veg",
+     120
+    ],
+    [
+     "brownrice",
+     150
+    ],
+    [
+     "oil",
+     5
+    ],
+    [
+     "spinach",
+     40
+    ]
+   ]
+  },
+  {
+   "id": "d10",
+   "kind": "dinner",
+   "title": "Tempeh veg stir-fry",
+   "hero": "tempeh",
+   "serving": "120 g tempeh, veg, brown rice",
+   "items": [
+    [
+     "tempeh",
+     120
+    ],
+    [
+     "veg",
+     200
+    ],
+    [
+     "brownrice",
+     150
+    ],
+    [
+     "oil",
+     8
+    ]
+   ]
+  },
+  {
+   "id": "s1",
+   "kind": "snack",
+   "title": "Roasted spiced chickpeas",
+   "hero": "chickpeas",
+   "serving": "100 g cooked chickpeas, roasted",
+   "items": [
+    [
+     "chickpeas",
+     100
+    ],
+    [
+     "oil",
+     6
+    ]
+   ]
+  },
+  {
+   "id": "s2",
+   "kind": "snack",
+   "title": "Salted edamame",
+   "hero": "edamame",
+   "serving": "120 g in pods or shelled",
+   "items": [
+    [
+     "edamame",
+     120
+    ]
+   ]
+  },
+  {
+   "id": "s3",
+   "kind": "snack",
+   "title": "Apple and peanut butter",
+   "hero": "peanut butter",
+   "serving": "1 apple, 20 g peanut butter",
+   "items": [
+    [
+     "apple",
+     150
+    ],
+    [
+     "pb",
+     20
+    ]
+   ]
+  },
+  {
+   "id": "s4",
+   "kind": "snack",
+   "title": "Hummus and veg sticks",
+   "hero": "chickpeas (hummus)",
+   "serving": "60 g hummus, raw veg sticks",
+   "items": [
+    [
+     "hummus",
+     60
+    ],
+    [
+     "veg",
+     120
+    ]
+   ]
+  },
+  {
+   "id": "s5",
+   "kind": "snack",
+   "title": "Pumpkin seed trail mix",
+   "hero": "pumpkin seeds, nuts",
+   "serving": "20 g seeds, 15 g nuts",
+   "items": [
+    [
+     "pumpkinseed",
+     20
+    ],
+    [
+     "nuts",
+     15
+    ]
+   ]
+  },
+  {
+   "id": "s6",
+   "kind": "snack",
+   "title": "Soya peanut butter smoothie",
+   "hero": "soya milk, peanut butter, hemp",
+   "serving": "250 ml soya milk, banana, 15 g PB, 10 g hemp",
+   "items": [
+    [
+     "soyamilk",
+     250
+    ],
+    [
+     "banana",
+     100
+    ],
+    [
+     "pb",
+     15
+    ],
+    [
+     "hemp",
+     10
+    ]
+   ]
+  },
+  {
+   "id": "s7",
+   "kind": "snack",
+   "title": "Peanut butter banana rice cakes",
+   "hero": "peanut butter",
+   "serving": "2 rice cakes, 20 g peanut butter, banana",
+   "items": [
+    [
+     "ricecake",
+     20
+    ],
+    [
+     "pb",
+     20
+    ],
+    [
+     "banana",
+     60
+    ]
+   ]
+  }
+ ]
+}
